@@ -38,7 +38,10 @@ object filter {
       .map {case line =>
 
           val linearray = line.replaceAll("\\(|\\)","").split(",")
-        ((linearray(0),linearray(1)),linearray(3))
+        if (linearray.length>3)
+          ((linearray(0),linearray(1)),linearray(3))
+        else
+          ("","")
       }
       .reduceByKey(_+" "+_)
       .saveAsTextFile(savepath)
