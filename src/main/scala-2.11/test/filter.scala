@@ -56,7 +56,7 @@ object filter {
       .reduceByKey(_+","+_)
 
 
-     /* .map{case (id, text)=>
+      .map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -68,36 +68,36 @@ object filter {
         val kk =  new StringBuilder
         for (i <- start to length)
           {
-            kk.append(i)
+            kk.append(textarray(i))
             kk.append(" ")
           }
       (id,kk.toString)
-    }*/
+    }
 
-    //  .mapPartitions{rows=>
+      .mapPartitions{rows=>
 
-        //val stopWords = broadstop.value
+        val stopWords = broadstop.value
 
-        /*.map{ case (id,text)=>
+        rows.map{ case (id,text)=>
 
-          val stopWords = broadstop.value
+
           val newstring = new StringBuilder
 
             val wordarray = text.split(" ")
             for (word <- wordarray)
               {
-                /*if (!stopWords.contains(word)&& word!="")
-                 {*/
+                if (!stopWords.contains(word)&& word!="")
+                 {
                    newstring.append(word)
                    newstring.append(" ")
-                 //}
+                 }
 
               }
           (id,newstring.toString())
 
-        }*/
+        }
 
-      //}
+      }
     .saveAsTextFile(savepath)
 
   }
