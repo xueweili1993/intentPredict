@@ -116,7 +116,7 @@ object filter {
 
               for (x<- Titles)
                 {
-                  b = b && !text.contains(x)
+                  b = b && !text.toLowerCase().contains(x)
                 }
               b == true
           }
@@ -146,7 +146,7 @@ object filter {
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
-        x(0).toString
+        x(0).toString.toLowerCase()
       }
 
     jdbc
