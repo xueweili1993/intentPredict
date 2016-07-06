@@ -80,7 +80,7 @@ object filter {
             (id, x)
           )
       }*/
-      .mapPartitions{rows=>
+      /*.mapPartitions{rows=>
 
         val stopWords = broadstop.value
 
@@ -99,7 +99,7 @@ object filter {
 
         }
 
-      }
+      }*/
     .saveAsTextFile(savepath)
 
   }
