@@ -65,22 +65,16 @@ object filter {
           {
             start = start-1
           }
-        val kk = new StringBuilder
+        val kk =  new StringBuilder
         for (i <- start to length)
           {
-            kk.append(textarray(i))
-            //kk.append(",")
+            kk.append(i)
+            kk.append(" ")
           }
-      (id,kk.toString())
+      (id,kk.toString().trim)
     }
-    /*  .flatMap{case (id,text)=>
 
-          val textarray  = text.split(" ")
-          textarray.map(x=>
-            (id, x)
-          )
-      }*/
-      /*.mapPartitions{rows=>
+      .mapPartitions{rows=>
 
         val stopWords = broadstop.value
 
@@ -99,7 +93,7 @@ object filter {
 
         }
 
-      }*/
+      }
     .saveAsTextFile(savepath)
 
   }
