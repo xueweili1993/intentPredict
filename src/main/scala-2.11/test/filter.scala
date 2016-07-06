@@ -71,7 +71,7 @@ object filter {
             kk.append(i)
             kk.append(" ")
           }
-      (id,kk.toString().trim)
+      (id,kk.toString())
     }
 
       .mapPartitions{rows=>
@@ -85,11 +85,14 @@ object filter {
             val wordarray = text.split(" ")
             for (word<- wordarray)
               {
-                if (!stopWords.contains(word))
-                  newstring.append(word)
+                if (!stopWords.contains(word)&& word!="")
+                 {
+                   newstring.append(word)
+                   newstring.append(" ")
+                 }
 
               }
-          (id,newstring.mkString(" "))
+          (id,newstring.toString())
 
         }
 
