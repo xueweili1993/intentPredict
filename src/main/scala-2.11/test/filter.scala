@@ -71,7 +71,7 @@ object filter {
             kk.append(textarray(i))
             //kk.append(",")
           }
-      (id,kk.mkString(" "))
+      (id,kk.toString())
     }
     /*  .flatMap{case (id,text)=>
 
