@@ -31,7 +31,7 @@ object filter {
 
     val hdfspath = "hdfs:///gaoy/searchWord/part-00000"
 
-    val savepath = "hdfs:///lxw/test"
+    val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
 
     val mydata = sc.textFile(hdfspath)
@@ -46,7 +46,7 @@ object filter {
       .reduceByKey(_+","+_)
 
       //.saveAsTextFile(savepath)
-      .map{case (id, text)=>
+      /*.map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -62,7 +62,7 @@ object filter {
             kk.append(",")
           }
       (id,kk.toString())
-    }
+    }*/
     .saveAsTextFile(savepath)
 
   }
