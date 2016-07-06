@@ -57,7 +57,7 @@ object filter {
       .flatMap {case line =>
 
           val linearray = line.replaceAll("\\(|\\)","").split(",")
-        if (linearray.length>3)
+        if (linearray.length>3 && linearray(3)!="")
           Some((linearray(0),linearray(1)),linearray(3))
         else
           None
