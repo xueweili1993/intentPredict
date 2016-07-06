@@ -80,7 +80,7 @@ object filter {
             kk.append(textarray(i))
             kk.append(" ")
           }
-      (id,kk.toString)
+      (id,kk.toString.replaceAll(" +"," "))
     }
 
      /* .mapPartitions{rows=>
