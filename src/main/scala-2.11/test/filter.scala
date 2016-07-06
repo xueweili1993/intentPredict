@@ -74,12 +74,13 @@ object filter {
       (id,kk.toString())
     }
 
-      .mapPartitions{rows=>
+    //  .mapPartitions{rows=>
 
-        val stopWords = broadstop.value
+        //val stopWords = broadstop.value
 
-        rows.map{ case (id,text)=>
+        .map{ case (id,text)=>
 
+          val stopWords = broadstop.value
           val newstring = new StringBuilder
 
             val wordarray = text.split(" ")
@@ -96,7 +97,7 @@ object filter {
 
         }
 
-      }
+      //}
     .saveAsTextFile(savepath)
 
   }
