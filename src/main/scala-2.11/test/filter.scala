@@ -35,16 +35,35 @@ object filter {
     HDFS.removeFile(savepath)
 
     val mydata = sc.textFile(hdfspath)
-      .map {case line =>
+      .flatMap {case line =>
 
           val linearray = line.replaceAll("\\(|\\)","").split(",")
         if (linearray.length>3)
-          ((linearray(0),linearray(1)),linearray(3))
+          Some((linearray(0),linearray(1)),linearray(3))
         else
-          ("","")
+          None
       }
-      .reduceByKey(_+" "+_)
-      .saveAsTextFile(savepath)
+      .reduceByKey(_+","+_)
+
+      //.saveAsTextFile(savepath)
+      .map{case (id, text)=>
+
+        val textarray = text.split(",")
+        val length  = textarray.length-1
+        var start = length
+        while (start-1>=0 && !textarray(start).contains(textarray(start-1)))
+          {
+            start = start-1
+          }
+        val kk = new StringBuilder
+        for (i <- start to length)
+          {
+            kk.append(textarray(i))
+            kk.append(",")
+          }
+      (id,kk.toString())
+    }
+    .saveAsTextFile(savepath)
 
   }
 
