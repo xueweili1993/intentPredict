@@ -30,9 +30,19 @@ object filter {
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
     val hdfspath = "hdfs:///gaoy/searchWord/part-00000"
+    val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
+
+    val Stop = sc.textFile(stopwords)
+      .map {case line =>
+
+        line.trim()
+      }
+        .collect
+    .toSet
+    val broadstop = sc.broadcast(Stop)
 
     val mydata = sc.textFile(hdfspath)
       .flatMap {case line =>
@@ -45,8 +55,8 @@ object filter {
       }
       .reduceByKey(_+","+_)
 
-      //.saveAsTextFile(savepath)
-      /*.map{case (id, text)=>
+
+      .map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -59,10 +69,37 @@ object filter {
         for (i <- start to length)
           {
             kk.append(textarray(i))
-            kk.append(",")
+            //kk.append(",")
           }
-      (id,kk.toString())
-    }*/
+      (id,kk.mkString(" "))
+    }
+    /*  .flatMap{case (id,text)=>
+
+          val textarray  = text.split(" ")
+          textarray.map(x=>
+            (id, x)
+          )
+      }*/
+      .mapPartitions{rows=>
+
+        val stopWords = broadstop.value
+
+        rows.map{ case (id,text)=>
+
+          val newstring = new StringBuilder
+
+            val wordarray = text.split(" ")
+            for (word<- wordarray)
+              {
+                if (!stopWords.contains(word))
+                  newstring.append(word)
+
+              }
+          (id,newstring.mkString(" "))
+
+        }
+
+      }
     .saveAsTextFile(savepath)
 
   }
