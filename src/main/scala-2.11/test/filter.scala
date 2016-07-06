@@ -71,7 +71,7 @@ object filter {
             kk.append(i)
             kk.append(" ")
           }
-      (id,kk.toString())
+      (id,kk.toString)
     }
 
     //  .mapPartitions{rows=>
