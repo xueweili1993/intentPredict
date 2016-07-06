@@ -78,13 +78,13 @@ object filter {
 
         //val stopWords = broadstop.value
 
-        .map{ case (id,text)=>
+        /*.map{ case (id,text)=>
 
           val stopWords = broadstop.value
           val newstring = new StringBuilder
 
             val wordarray = text.split(" ")
-            for (word<- wordarray)
+            for (word <- wordarray)
               {
                 /*if (!stopWords.contains(word)&& word!="")
                  {*/
@@ -95,7 +95,7 @@ object filter {
               }
           (id,newstring.toString())
 
-        }
+        }*/
 
       //}
     .saveAsTextFile(savepath)
