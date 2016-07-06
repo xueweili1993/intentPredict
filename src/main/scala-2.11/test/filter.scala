@@ -86,11 +86,11 @@ object filter {
             val wordarray = text.split(" ")
             for (word<- wordarray)
               {
-                if (!stopWords.contains(word)&& word!="")
-                 {
+                /*if (!stopWords.contains(word)&& word!="")
+                 {*/
                    newstring.append(word)
                    newstring.append(" ")
-                 }
+                 //}
 
               }
           (id,newstring.toString())
