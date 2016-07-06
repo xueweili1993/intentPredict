@@ -74,7 +74,7 @@ object filter {
       (id,kk.toString)
     }
 
-     /* .mapPartitions{rows=>
+      .mapPartitions{rows=>
 
         val stopWords = broadstop.value
 
@@ -97,7 +97,7 @@ object filter {
 
         }
 
-      }*/
+      }
     .saveAsTextFile(savepath)
 
   }
