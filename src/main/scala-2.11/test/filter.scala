@@ -38,6 +38,7 @@ object filter {
     HDFS.removeFile(savepath)
 
     val title = findtitle(sc)
+        .distinct()
       .collect
       .toSet
 
