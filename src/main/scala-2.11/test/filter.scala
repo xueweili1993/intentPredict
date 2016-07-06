@@ -44,14 +44,14 @@ object filter {
 
     val broadtitle = sc.broadcast(title)
 
-    val Stop = sc.textFile(stopwords)
+   /* val Stop = sc.textFile(stopwords)
       .map {case line =>
 
         line.trim()
       }
         .collect
     .toSet
-    val broadstop = sc.broadcast(Stop)
+    val broadstop = sc.broadcast(Stop)*/
 
     val mydata = sc.textFile(hdfspath)
       .flatMap {case line =>
@@ -83,7 +83,7 @@ object filter {
       (id,kk.toString)
     }
 
-      .mapPartitions{rows=>
+     /* .mapPartitions{rows=>
 
         val stopWords = broadstop.value
 
@@ -106,7 +106,7 @@ object filter {
 
         }
 
-      }
+      }*/
         .mapPartitions{rows=>
 
           val Titles = broadtitle.value
