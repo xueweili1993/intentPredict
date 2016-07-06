@@ -1,6 +1,8 @@
 package test
 
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
+import spire.std.boolean
 
 /**
   * Created by xinmei on 16/6/30.
@@ -34,6 +36,12 @@ object filter {
 
     val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
+
+    val title = findtitle(sc)
+      .collect
+      .toSet
+
+    val broadtitle = sc.broadcast(title)
 
     val Stop = sc.textFile(stopwords)
       .map {case line =>
@@ -98,8 +106,51 @@ object filter {
         }
 
       }
+        .mapPartitions{rows=>
+
+          val Titles = broadtitle.value
+          var b:Boolean = true
+
+          rows.filter{case (id, text)=>
+
+              for (x<- Titles)
+                {
+                  b = b && !text.contains(x)
+                }
+              b == true
+          }
+        }
     .saveAsTextFile(savepath)
 
   }
+
+
+
+  def findtitle(sc:SparkContext)={
+
+
+    //val savepath = "hdfs:///lxw/AppwithCate1"
+
+    val sqlContext = new SQLContext(sc)
+    val jdbcDF = sqlContext.read.format("jdbc").options(
+      Map("url" -> "jdbc:mysql://172.31.27.7:3306/koala?user=aduser3&password=VbhaYja_eErJ",
+        "dbtable" -> "ad",
+        "driver" -> "com.mysql.jdbc.Driver"
+      )
+    ).load()
+
+    jdbcDF.registerTempTable("ad")
+
+    val sqlcmd = "select title from ad"
+    //val sqlcmd = "select app_id from app"
+    val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
+      .map{x =>
+        x(0).toString
+      }
+
+    jdbc
+
+  }
+
 
   }
