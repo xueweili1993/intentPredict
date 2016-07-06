@@ -56,7 +56,7 @@ object filter {
       .reduceByKey(_+","+_)
 
 
-      .map{case (id, text)=>
+     /* .map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -72,7 +72,7 @@ object filter {
             kk.append(" ")
           }
       (id,kk.toString)
-    }
+    }*/
 
     //  .mapPartitions{rows=>
 
