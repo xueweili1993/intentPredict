@@ -56,16 +56,21 @@ object filter {
     val mydata = sc.textFile(hdfspath)
       .flatMap {case line =>
 
-          val linearray = line.replaceAll("\\(|\\)","").split(",")
+          val linearray = line.replaceAll("\\(|\\)","").split(",",4)
         if (linearray.length>3 && linearray(3)!="")
           Some((linearray(0),linearray(1)),linearray(3))
         else
           None
       }
       .reduceByKey(_+","+_)
+      .map { case (id, text)=>
+
+         val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
+        (id, newtext)
+      }
 
 
-      .map{case (id, text)=>
+     /* .map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -81,7 +86,7 @@ object filter {
             kk.append(" ")
           }
       (id,kk.toString.replaceAll(" +"," "))
-    }
+    }*/
 
      /* .mapPartitions{rows=>
 
