@@ -1,5 +1,10 @@
 package test
 
+import java.util.Comparator
+
+import breeze.linalg.min
+
+import com.rockymadden.stringmetric.similarity.DiceSorensenMetric
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spire.std.boolean
@@ -44,14 +49,14 @@ object filter {
 
     val broadtitle = sc.broadcast(title)
 
-   /* val Stop = sc.textFile(stopwords)
+    val Stop = sc.textFile(stopwords)
       .map {case line =>
 
         line.trim()
       }
         .collect
     .toSet
-    val broadstop = sc.broadcast(Stop)*/
+    val broadstop = sc.broadcast(Stop)
 
     val mydata = sc.textFile(hdfspath)
       .flatMap {case line =>
@@ -70,7 +75,7 @@ object filter {
       }
 
 
-     /* .map{case (id, text)=>
+      .map{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -86,11 +91,13 @@ object filter {
             kk.append(" ")
           }
       (id,kk.toString.replaceAll(" +"," "))
-    }*/
+    }
 
-     /* .mapPartitions{rows=>
+      .mapPartitions{rows=>
 
         val stopWords = broadstop.value
+
+       val Titles = broadtitle.value
 
         rows.map{ case (id,text)=>
 
@@ -100,33 +107,45 @@ object filter {
             val wordarray = text.split(" ")
             for (word <- wordarray)
               {
-                if (!stopWords.contains(word)&& word!="")
-                 {
-                   newstring.append(word)
-                   newstring.append(" ")
-                 }
+                for (tit <- Titles) {
+                  val compared = DiceSorensenMetric(1).compare(word, tit)
+
+                  val hh = compared match {
+                    case None => 0
+
+                    case Some(compared) => compared
+                  }
+
+                  if (!stopWords.contains(word) && word != "" && hh > 0.5) {
+                    newstring.append(word)
+                    newstring.append(",")
+                    newstring.append(tit)
+                    newstring.append(" ")
+                  }
+                }
 
               }
           (id,newstring.toString())
 
         }
 
-      }*/
-        .mapPartitions{rows=>
+      }
+      .filter{case(id,text)=>
+
+          text.nonEmpty
+      }
+      .saveAsTextFile(savepath)
+        /*.mapPartitions{rows=>
 
           val Titles = broadtitle.value
           var b:Boolean = true
 
-          rows.filter{case (id, text)=>
+          rows.map {case (id,text)=>
 
-              for (x<- Titles)
-                {
-                  b = b && !text.toLowerCase().contains(x)
-                }
-              b == true
-          }
-        }
-    .saveAsTextFile(savepath)
+              val wordarray = text.split(" ")
+
+          }*/
+
 
   }
 
@@ -159,4 +178,4 @@ object filter {
   }
 
 
-  }
+}
