@@ -36,7 +36,7 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///gaoy/searchWord/*"
+    val hdfspath = "hdfs:///gaoy/searchWord/part-00000"
     val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
