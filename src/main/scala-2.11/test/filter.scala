@@ -75,7 +75,7 @@ object filter {
       }
 
 
-      .map{case (id, text)=>
+      .flatMap{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -90,7 +90,14 @@ object filter {
             kk.append(textarray(i))
             kk.append(" ")
           }
-      (id,kk.toString.replaceAll(" +"," "))
+
+        val newtext= kk.toString.replaceAll(" +"," ")
+          newtext.split(" ")
+            .map{x=>
+
+              (id,x)
+            }
+
     }
 
       .mapPartitions{rows=>
@@ -99,32 +106,31 @@ object filter {
 
        val Titles = broadtitle.value
 
-        rows.map{ case (id,text)=>
+        rows.map{ case (id,word)=>
 
 
           val newstring = new StringBuilder
 
-            val wordarray = text.split(" ")
-            for (word <- wordarray)
-              {
-                for (tit <- Titles) {
-                  val compared = DiceSorensenMetric(1).compare(word, tit)
 
-                  val hh = compared match {
-                    case None => 0
 
-                    case Some(compared) => compared
-                  }
+          for (tit <- Titles) {
+            val compared = DiceSorensenMetric(1).compare(word, tit)
 
-                  if (!stopWords.contains(word) && word != "" && hh > 0.5) {
-                    newstring.append(word)
-                    newstring.append(",")
-                    newstring.append(tit)
-                    newstring.append(" ")
-                  }
-                }
+            val hh = compared match {
+              case None => 0
 
-              }
+              case Some(compared) => compared
+            }
+
+            if (!stopWords.contains(word) && word != "" && hh > 0.5) {
+              newstring.append(word)
+              newstring.append(",")
+              newstring.append(tit)
+
+            }
+          }
+
+
           (id,newstring.toString())
 
         }
