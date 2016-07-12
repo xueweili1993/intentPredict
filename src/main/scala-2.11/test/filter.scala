@@ -140,7 +140,12 @@ object filter {
 
           text!=""
       }
-      .saveAsTextFile(savepath)
+      .collect()
+      .foreach(x=>
+
+        println ("lxw log "+ x._2)
+      )
+      //.saveAsTextFile(savepath)
         /*.mapPartitions{rows=>
 
           val Titles = broadtitle.value
