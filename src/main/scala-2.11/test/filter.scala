@@ -114,15 +114,16 @@ object filter {
 
 
           for (tit <- Titles) {
-            val compared = DiceSorensenMetric(1).compare(word, tit)
+            //val compared = DiceSorensenMetric(1).compare(word, tit)
 
-            val hh = compared match {
+           /* val hh = compared match {
               case None => 0
 
               case Some(compared) => compared
-            }
+            }*/
 
-            if (!stopWords.contains(word) && word != "" && hh > 0.5) {
+            //if (!stopWords.contains(word) && word != "" && hh > 0.5) {
+            if (!stopWords.contains(word) && word != "" ) {
               newstring.append(word)
               newstring.append(",")
               newstring.append(tit)
