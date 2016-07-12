@@ -16,3 +16,13 @@ libraryDependencies += "org.apache.spark" % "spark-sql_2.11" % "1.6.1" % "provid
 libraryDependencies += "org.json" % "json" % "20160212"
 
 libraryDependencies += "com.amazonaws" % "aws-java-sdk" % "1.11.0" % "provided"
+
+//libraryDependencies += "com.github.universal-automata" % "liblevenshtein" % "3.0.0"
+
+
+// https://mvnrepository.com/artifact/com.rockymadden.stringmetric/stringmetric-core_2.11
+libraryDependencies += "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4"
+
+
+
+
