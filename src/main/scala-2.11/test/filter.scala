@@ -98,11 +98,11 @@ object filter {
             }
 
     }
-        .mapPartitions{rows=>
+        .map{case (id, textwords)=>
 
           val titles = broadtitle.value
 
-          rows.map{case (id, textwords)=>
+
             var nn = 0.0
             val newstring = new StringBuilder
 
@@ -132,7 +132,7 @@ object filter {
             (id, textwords, newstring.toString())
 
           }
-        }
+
 
 
       .saveAsTextFile(savepath)
