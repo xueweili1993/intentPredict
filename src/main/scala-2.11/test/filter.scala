@@ -100,63 +100,8 @@ object filter {
 
     }
 
-      .mapPartitions{rows=>
 
-        val stopWords = broadstop.value
-
-       val Titles = broadtitle.value
-
-        rows.map{ case (id,word)=>
-
-
-          val newstring = new StringBuilder
-
-
-
-          for (tit <- Titles) {
-            //val compared = DiceSorensenMetric(1).compare(word, tit)
-
-           /* val hh = compared match {
-              case None => 0
-
-              case Some(compared) => compared
-            }*/
-
-            //if (!stopWords.contains(word) && word != "" && hh > 0.5) {
-            if (!stopWords.contains(word) && word != "" ) {
-              newstring.append(word)
-              newstring.append(",")
-              newstring.append(tit)
-
-            }
-          }
-
-
-          (id,newstring.toString())
-
-        }
-
-      }
-      /*.filter{case(id,text)=>
-
-          text!=""
-      }
-      .collect()
-      .foreach(x=>
-
-        println ("lxw log "+ x._2)
-      )*/
       .saveAsTextFile(savepath)
-        /*.mapPartitions{rows=>
-
-          val Titles = broadtitle.value
-          var b:Boolean = true
-
-          rows.map {case (id,text)=>
-
-              val wordarray = text.split(" ")
-
-          }*/
 
 
   }
