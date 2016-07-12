@@ -98,6 +98,7 @@ object filter {
             }
 
     }
+        .repartition(10)
         .map{case (id, textwords)=>
 
           val titles = broadtitle.value
