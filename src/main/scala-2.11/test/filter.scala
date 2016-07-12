@@ -123,7 +123,7 @@ object filter {
                   nn = nn+value
                 }
 
-                if (nn>0.7)
+                if (nn>2)
                   {
                     newstring.append(x)
                     newstring.append(" ")
