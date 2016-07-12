@@ -3,8 +3,7 @@ package test
 import java.util.Comparator
 
 import breeze.linalg.min
-
-import com.rockymadden.stringmetric.similarity.DiceSorensenMetric
+import com.rockymadden.stringmetric.similarity.{DiceSorensenMetric, JaroMetric}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spire.std.boolean
@@ -99,6 +98,41 @@ object filter {
             }
 
     }
+        .mapPartitions{rows=>
+
+          val titles = broadtitle.value
+
+          rows.map{case (id, textwords)=>
+            var nn = 0.0
+            val newstring = new StringBuilder
+
+              for (x<- titles){
+
+                val titlewords = x.split(" ")
+                 nn =0.0
+                for (word<- titlewords ){
+                  val similarity = JaroMetric.compare(word, textwords)
+
+                   val value = similarity match{
+
+                     case None=> 0
+                     case Some(similarity) => similarity
+
+                   }
+                  nn = nn+value
+                }
+
+                if (nn>0.7)
+                  {
+                    newstring.append(x)
+                    newstring.append(" ")
+                  }
+              }
+
+            (id, textwords, newstring.toString())
+
+          }
+        }
 
 
       .saveAsTextFile(savepath)
