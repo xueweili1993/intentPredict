@@ -136,7 +136,7 @@ object filter {
         }
 
       }
-      .filter{case(id,text)=>
+      /*.filter{case(id,text)=>
 
           text!=""
       }
@@ -144,8 +144,8 @@ object filter {
       .foreach(x=>
 
         println ("lxw log "+ x._2)
-      )
-      //.saveAsTextFile(savepath)
+      )*/
+      .saveAsTextFile(savepath)
         /*.mapPartitions{rows=>
 
           val Titles = broadtitle.value
