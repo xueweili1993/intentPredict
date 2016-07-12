@@ -138,7 +138,7 @@ object filter {
       }
       .filter{case(id,text)=>
 
-          text.nonEmpty
+          text!=""
       }
       .saveAsTextFile(savepath)
         /*.mapPartitions{rows=>
