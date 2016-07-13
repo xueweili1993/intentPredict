@@ -44,7 +44,7 @@ object getdata {
     val adlog = sc.textFile(path)
       .filter{case line=>
 
-          line.contains("3.0.2.1")
+          line.contains("3.0.2.2")
       }
       .saveAsTextFile(savepath)
 
