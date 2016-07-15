@@ -43,7 +43,7 @@ object filter {
 
     val title = findtitle(sc)
         .filter{case line =>
-        line.length<31
+        line.length<31 && line.length>2
         }
       .distinct()
       .collect
