@@ -42,6 +42,10 @@ object filter {
     HDFS.removeFile(savepath)
 
     val title = findtitle(sc)
+        .map{case line =>
+
+            line.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
+        }
         .filter{case line =>
 
           val linearray = line.split(" ")
