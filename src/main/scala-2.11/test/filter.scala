@@ -47,17 +47,17 @@ object filter {
 
         line.replaceAll("[^a-z1-9]"," ").replaceAll(" +"," ").trim
       }
-        /*.filter{case line =>
+        .filter{case line =>
 
           val linearray = line.split(" ")
           line.length<31 && line.length>2 && linearray.length>1
-        }*/
+        }
 
       .distinct()
-      .saveAsTextFile(savepath)
-      /*.collect
+      //.saveAsTextFile(savepath)
+      .collect
       .toSet
-*/
+
     val broadtitle = sc.broadcast(title)
 
     val Stop = sc.textFile(stopwords)
@@ -71,7 +71,7 @@ object filter {
 
 
 
-   /* val mydata = sc.textFile(hdfspath)
+    val mydata = sc.textFile(hdfspath)
 
       .flatMap {case line =>
 
@@ -108,8 +108,8 @@ object filter {
         }
         .filter{case line=>
         line!=""
-        }*/
-    //.saveAsTextFile(savepath)
+        }
+    .saveAsTextFile(savepath)
 
 
 
