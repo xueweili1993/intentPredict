@@ -86,7 +86,7 @@ object filter {
           title.map{case pattern=>
 
 
-            val sign = StringCompare.fuzzymatch(textwords,pattern,5)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,1)
 
             if (sign){
               pattern+ ":"+ textwords
