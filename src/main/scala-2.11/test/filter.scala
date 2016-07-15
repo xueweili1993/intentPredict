@@ -42,7 +42,10 @@ object filter {
     HDFS.removeFile(savepath)
 
     val title = findtitle(sc)
-        .distinct()
+        .filter{case line =>
+        line.length<31
+        }
+      .distinct()
       .collect
       .toSet
 
@@ -72,9 +75,10 @@ object filter {
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
         (id, newtext)
       }
+        mydata.saveAsTextFile(savepath)
 
 
-      .flatMap{case (id, text)=>
+      /*.flatMap{case (id, text)=>
 
         val textarray = text.split(",")
         val length  = textarray.length-1
@@ -97,47 +101,24 @@ object filter {
               (id,x)
             }
 
-    }
-        .repartition(10)
+    }*/
+      mydata
         .map{case (id, textwords)=>
 
           val titles = broadtitle.value
 
+          for (pattern<-title){
 
-            var nn = 0.0
-            val newstring = new StringBuilder
 
-              for (x<- titles){
+            val sign = StringCompare.fuzzymatch(textwords,pattern,3)
 
-                val titlewords = x.split(" ")
-                 nn =0.0
-                for (word<- titlewords ){
-                  val similarity = JaroMetric.compare(word, textwords)
-
-                   val value = similarity match{
-
-                     case None=> 0
-                     case Some(similarity) => similarity
-
-                   }
-                  nn = nn+value
-                }
-
-                if (nn>2)
-                  {
-                    newstring.append(x)
-                    newstring.append(" ")
-                  }
-              }
-
-            (id, textwords, newstring.toString())
+            if (sign){
+              println ("lxw log "+ pattern+ ":"+ textwords)
+            }
 
           }
 
-
-
-      .saveAsTextFile(savepath)
-
+        }
 
   }
 
