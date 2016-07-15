@@ -43,7 +43,9 @@ object filter {
 
     val title = findtitle(sc)
         .filter{case line =>
-        line.length<31 && line.length>2
+
+          val linearray = line.split(" ")
+          line.length<31 && line.length>2| linearray.length>1
         }
       .distinct()
       .collect
@@ -86,7 +88,7 @@ object filter {
           title.map{case pattern=>
 
 
-            val sign = StringCompare.fuzzymatch(textwords,pattern,1)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,4)
 
             if (sign._1){
               pattern+ ":"+ textwords+":"+sign._2
