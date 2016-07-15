@@ -38,7 +38,7 @@ object filter {
     val hdfspath = "hdfs:///lxw/awsdata/*"
     val stopwords  = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test1"
+    val savepath = "hdfs:///lxw/test2"
     HDFS.removeFile(savepath)
 
     val title = findtitle(sc)
@@ -88,7 +88,7 @@ object filter {
           title.map{case pattern=>
 
 
-            val sign = StringCompare.fuzzymatch(textwords,pattern,1)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,2)
 
             if (sign._1){
               pattern+ ":"+ textwords+":"+sign._2
