@@ -135,7 +135,7 @@ object filter {
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
-        x(0).toString.toLowerCase()
+        x(0).toString.toLowerCase().replace("\n"," ")
       }
 
     jdbc
