@@ -110,7 +110,7 @@ object filter {
           for (pattern<-title){
 
 
-            val sign = StringCompare.fuzzymatch(textwords,pattern,3)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,5)
 
             if (sign){
               println ("lxw log "+ pattern+ ":"+ textwords)
