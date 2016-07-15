@@ -60,7 +60,10 @@ object filter {
     .toSet
     val broadstop = sc.broadcast(Stop)
 
+    val test = "candy crash soda saga"
+
     val mydata = sc.textFile(hdfspath)
+
       .flatMap {case line =>
 
           val linearray = line.replaceAll("\\(|\\)","").split(",",4)
@@ -73,7 +76,7 @@ object filter {
       .map { case (id, text)=>
 
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-        (id, newtext)
+        (id, newtext.toLowerCase)
       }
         mydata.saveAsTextFile(savepath)
 
@@ -107,7 +110,7 @@ object filter {
 
           val titles = broadtitle.value
 
-          for (pattern<-title){
+         /* for (pattern<-title){
 
 
             val sign = StringCompare.fuzzymatch(textwords,pattern,5)
@@ -116,6 +119,12 @@ object filter {
               println ("lxw log "+ pattern+ ":"+ textwords)
             }
 
+          }*/
+
+          val sign = StringCompare.fuzzymatch(textwords,"photo studio",5)
+
+          if (sign){
+            println ("lxw log "+ "Photo Studio"+ ":"+ textwords)
           }
 
         }
