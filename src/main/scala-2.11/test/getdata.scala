@@ -35,17 +35,14 @@ object getdata {
     //    val path = "s3n://xinmei-ad-log/ad/ad.log.skip*."+date
 
     //modified by Gao Yuan. 2016-07-11. The ad log data has been backed up in hdfs first.
-    val path = "hdfs:///adlog/ad.log.skip*."+date
-    val savepath = "hdfs:///lxw/test"
+    val path = "hdfs:///gaoy/searchWord/part-00000"
+    val savepath = "hdfs:///lxw/awsdata"
 
     HDFS.removeFile(savepath)
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      .filter{case line=>
 
-          line.contains("3.0.2.2")
-      }
       .saveAsTextFile(savepath)
 
 
