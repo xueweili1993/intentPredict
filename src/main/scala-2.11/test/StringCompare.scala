@@ -69,7 +69,7 @@ object StringCompare {
       var Rnew = ((Rold << 1) | 1) & getstatus
       R(0) = Rnew
 
-      for (i<- 1 to 2){
+      for (i<- 1 to k){
 
         Rnew = ((R(i) << 1) & getstatus) | Rold | ((Rold | Rnew) << 1) | 1
 
