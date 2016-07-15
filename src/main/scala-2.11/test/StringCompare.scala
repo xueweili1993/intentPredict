@@ -51,6 +51,7 @@ object StringCompare {
     // showarray(R)
 
     var sign = false
+    var pos = ""
 
 
     for (position<- 0 to tl-1) {
@@ -88,10 +89,11 @@ object StringCompare {
         println ("yes"+" "+ targetchar)
 
         sign = true
+        pos = target.substring(position-pl+1, position)
 
       }
     }
-    sign
+    (sign,pos)
 
   }
 

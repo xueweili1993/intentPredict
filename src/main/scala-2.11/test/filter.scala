@@ -88,8 +88,8 @@ object filter {
 
             val sign = StringCompare.fuzzymatch(textwords,pattern,1)
 
-            if (sign){
-              pattern+ ":"+ textwords
+            if (sign._1){
+              pattern+ ":"+ textwords+":"+sign._2
             }
             else{
               ""
