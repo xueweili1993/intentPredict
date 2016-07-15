@@ -89,7 +89,7 @@ object StringCompare {
         println ("yes"+" "+ targetchar)
 
         sign = true
-        pos = target.substring(max(0,position-pl+1), position)
+        pos = target.substring(max(0,position-pl+1), position+1)
 
       }
     }
