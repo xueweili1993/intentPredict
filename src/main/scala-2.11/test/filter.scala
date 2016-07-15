@@ -45,7 +45,7 @@ object filter {
         .filter{case line =>
 
           val linearray = line.split(" ")
-          line.length<31 && line.length>5
+          line.length<31 && line.length>2 && linearray.length>1
         }
       .distinct()
       .collect
