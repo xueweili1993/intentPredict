@@ -45,7 +45,7 @@ object filter {
 
       .map{case line =>
 
-        line.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
+        line.replaceAll("[^a-z1-9]"," ").replaceAll(" +"," ").trim
       }
         /*.filter{case line =>
 
@@ -69,7 +69,7 @@ object filter {
     .toSet
     val broadstop = sc.broadcast(Stop)
 
-    val test = "candy crash soda saga"
+
 
    /* val mydata = sc.textFile(hdfspath)
 
