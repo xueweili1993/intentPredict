@@ -45,7 +45,7 @@ object filter {
 
         .filter{case line =>
 
-          val linearray = line.replaceAll(" +"," ").trim.split(" ")
+          val linearray = line.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ").trim.split(" ")
           line.length<31 && line.length>2 && linearray.length>1
         }
      /* .map{case line =>
