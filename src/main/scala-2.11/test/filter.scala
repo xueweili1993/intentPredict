@@ -78,7 +78,7 @@ object filter {
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
         (id, newtext.toLowerCase)
       }
-
+        .repartition(10)
       .flatMap{case (id, textwords)=>
 
           val titles = broadtitle.value
