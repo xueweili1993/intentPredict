@@ -48,10 +48,10 @@ object filter {
           val linearray = line.split(" ")
           line.length<31 && line.length>2 && linearray.length>1
         }
-      .map{case line =>
+     /* .map{case line =>
 
         line.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-      }
+      }*/
       .distinct()
       .collect
       .toSet
