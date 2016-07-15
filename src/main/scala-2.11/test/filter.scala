@@ -105,10 +105,10 @@ object filter {
             }
 
           }
-        }*/
+        }
         .filter{case line=>
         line!=""
-        }
+        }*/
     //.saveAsTextFile(savepath)
 
 
