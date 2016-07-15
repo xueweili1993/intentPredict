@@ -78,56 +78,28 @@ object filter {
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
         (id, newtext.toLowerCase)
       }
-        mydata.saveAsTextFile(savepath)
 
-
-      /*.flatMap{case (id, text)=>
-
-        val textarray = text.split(",")
-        val length  = textarray.length-1
-        var start = length
-        while (start-1>=0 && !textarray(start).contains(textarray(start-1)))
-          {
-            start = start-1
-          }
-        val kk =  new StringBuilder
-        for (i <- start to length)
-          {
-            kk.append(textarray(i))
-            kk.append(" ")
-          }
-
-        val newtext= kk.toString.replaceAll(" +"," ")
-          newtext.split(" ")
-            .map{x=>
-
-              (id,x)
-            }
-
-    }*/
-      mydata
-        .map{case (id, textwords)=>
+      .flatMap{case (id, textwords)=>
 
           val titles = broadtitle.value
 
-         /* for (pattern<-title){
+          title.map{case pattern=>
 
 
             val sign = StringCompare.fuzzymatch(textwords,pattern,5)
 
             if (sign){
-              println ("lxw log "+ pattern+ ":"+ textwords)
+              pattern+ ":"+ textwords
+            }
+            else{
+              ""
             }
 
-          }*/
-
-          val sign = StringCompare.fuzzymatch("pics PicsArt Photo Studio pics PicsArt Photo Studio","photo studio",5)
-
-
-            println ("lxw log "+ sign)
-
-
+          }
         }
+    .saveAsTextFile(savepath)
+
+
 
   }
 
