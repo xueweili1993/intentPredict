@@ -10,9 +10,9 @@ object StringCompare {
 
   def main (args: Array[String])={
 
-    val target = "annealing"
-    val pattern  = "annual"
-    val k = 2
+    val target = "pics PicsArt Photo Studio pics PicsArt Photo Studio"
+    val pattern  = "photo studio"
+    val k = 5
 
     val iscontain= fuzzymatch(target, pattern, k)
     println (iscontain)

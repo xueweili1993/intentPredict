@@ -121,11 +121,11 @@ object filter {
 
           }*/
 
-          val sign = StringCompare.fuzzymatch(textwords,"photo studio",5)
+          val sign = StringCompare.fuzzymatch("pics PicsArt Photo Studio pics PicsArt Photo Studio","photo studio",5)
 
-          if (sign){
-            println ("lxw log "+ "Photo Studio"+ ":"+ textwords)
-          }
+
+            println ("lxw log "+ sign)
+
 
         }
 
