@@ -13,7 +13,7 @@ import spire.std.boolean
   */
 object filter {
 
-  def main (args: Array[String])= {
+  def main (args: Array[String]) {
 
     val conf = new SparkConf()
 
