@@ -45,7 +45,7 @@ object filter {
 
         .filter{case line =>
 
-          val linearray = line.split(" ")
+          val linearray = line.replaceAll(" +"," ").trim.split(" ")
           line.length<31 && line.length>2 && linearray.length>1
         }
      /* .map{case line =>
@@ -53,9 +53,10 @@ object filter {
         line.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
       }*/
       .distinct()
-      .collect
+      .saveAsTextFile(savepath)
+      /*.collect
       .toSet
-
+*/
     val broadtitle = sc.broadcast(title)
 
     val Stop = sc.textFile(stopwords)
@@ -69,7 +70,7 @@ object filter {
 
     val test = "candy crash soda saga"
 
-    val mydata = sc.textFile(hdfspath)
+   /* val mydata = sc.textFile(hdfspath)
 
       .flatMap {case line =>
 
@@ -103,11 +104,11 @@ object filter {
             }
 
           }
-        }
+        }*/
         .filter{case line=>
         line!=""
         }
-    .saveAsTextFile(savepath)
+    //.saveAsTextFile(savepath)
 
 
 
