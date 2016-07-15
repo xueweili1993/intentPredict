@@ -43,15 +43,16 @@ object filter {
 
     val title = findtitle(sc)
 
-        .filter{case line =>
+      .map{case line =>
 
-          val linearray = line.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim.split(" ")
+        line.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
+      }
+        /*.filter{case line =>
+
+          val linearray = line.split(" ")
           line.length<31 && line.length>2 && linearray.length>1
-        }
-     /* .map{case line =>
+        }*/
 
-        line.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-      }*/
       .distinct()
       .saveAsTextFile(savepath)
       /*.collect
