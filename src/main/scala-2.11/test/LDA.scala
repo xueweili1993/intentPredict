@@ -11,9 +11,9 @@ import org.apache.spark.mllib.clustering.{LDA, DistributedLDAModel}
 /**
   * Created by xinmei on 16/7/19.
   */
-object LDA {
+object myLDA {
 
-  def main (args: Array[String]) {
+  def main (args: Array[String]) ={
 
     val conf = new SparkConf()
 
