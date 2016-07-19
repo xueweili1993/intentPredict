@@ -73,7 +73,7 @@ object myLDA {
     val ldaModel = new LDA().setK(3).run(corpus)
 
     println("Learned topics (as distributions over vocab of " + ldaModel.vocabSize + " words):")
-    val topics = ldaModel.topicsMatrix
+    //val topics = ldaModel.topicsMatrix
    /* for (topic <- Range(0, 3)) {
       print("Topic " + topic + ":")
       for (word <- Range(0, ldaModel.vocabSize)) { print(" " + topics(word, topic)); }
