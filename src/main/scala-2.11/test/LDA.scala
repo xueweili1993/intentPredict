@@ -13,7 +13,7 @@ import org.apache.spark.mllib.clustering.{LDA, DistributedLDAModel}
   */
 object LDA {
 
-  def main (args: Array[String])= {
+  def main (args: Array[String]) {
 
     val conf = new SparkConf()
 
@@ -85,11 +85,7 @@ object LDA {
 
 
 
-    adlog.saveAsTextFile(savepath)
-
-
-
-
+    //adlog.saveAsTextFile(savepath)
 
   }
 
