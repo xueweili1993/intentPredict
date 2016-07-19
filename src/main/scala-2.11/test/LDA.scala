@@ -5,6 +5,8 @@ import java.util.Calendar
 
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.mllib.clustering.{LDA, DistributedLDAModel}
+
 
 /**
   * Created by xinmei on 16/7/19.
@@ -48,12 +50,42 @@ object LDA {
         val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
         newtext.toLowerCase.split(" ")map { x =>
 
-          (id, x)
+          ((id, x),1)
         }
       }
+      .reduceByKey(_+_)
+      .map { case ((id, x), num) =>
+
+        (id,(x,num))
+      }
+      .groupByKey()
+
+      val nums = adlog.map{case (id,array)=>
+
+        val vec = Vectors.dense(array.map(x=>x._2.toDouble).toArray)
+        val words = array.map(x=>x._1).toArray
+        (words,vec)
+      }
+      val pp = nums.map(x=> x._2)
+
+    val corpus = pp.zipWithIndex.map(_.swap).cache()
+
+    val ldaModel = new LDA().setK(3).run(corpus)
+
+    println("Learned topics (as distributions over vocab of " + ldaModel.vocabSize + " words):")
+    val topics = ldaModel.topicsMatrix
+    for (topic <- Range(0, 3)) {
+      print("Topic " + topic + ":")
+      for (word <- Range(0, ldaModel.vocabSize)) { print(" " + topics(word, topic)); }
+      println()
+    }
 
 
-      adlog.saveAsTextFile(savepath)
+
+
+
+
+    adlog.saveAsTextFile(savepath)
 
 
 
