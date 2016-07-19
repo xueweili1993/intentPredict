@@ -3,6 +3,7 @@ package test
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -42,12 +43,19 @@ object LDA {
           None
       }
       .reduceByKey(_+","+_)
-      .map { case (id, text)=>
+      .flatMap { case (id, text)=>
 
         val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-        (id, newtext.toLowerCase)
+        newtext.toLowerCase.map(_ ->
+
+          (id,_)
+        )
       }
-      .saveAsTextFile(savepath)
+
+
+      adlog.saveAsTextFile(savepath)
+
+
 
 
 
