@@ -46,10 +46,10 @@ object LDA {
       .flatMap { case (id, text)=>
 
         val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-        newtext.toLowerCase.map(_ ->
+        newtext.toLowerCase.map { x =>
 
-          (id,_)
-        )
+          (id, x)
+        }
       }
 
 
