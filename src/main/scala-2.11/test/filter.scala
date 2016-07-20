@@ -86,19 +86,19 @@ object filter {
 
    // val mydata = litedata
       val mydata = sc.textFile(hdfspath)
-       .map {case line =>
+       .flatMap {case line =>
 
            val kk = line. replaceAll ("\\(|\\)","")
-           /*val linearray = kk.split(",")
+           val linearray = kk.split(",")
          if (linearray.length>1) {
-           (linearray(0), linearray(1))
+           Some((linearray(0), linearray(1)))
          }else{
-           (linearray(0),"")
-         }*/
-         kk
+           None
+         }
+         //kk
        }
 
-      /*.reduceByKey(_+","+_)
+      .reduceByKey(_+","+_)
       .map { case (id, text)=>
 
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
@@ -126,7 +126,7 @@ object filter {
         }
         .filter{case line=>
         line!=""
-        }*/
+        }
     .saveAsTextFile(savepath)
 
 
