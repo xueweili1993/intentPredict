@@ -27,6 +27,12 @@ object getdata {
 
     val anchordate = "20160426"
 
+    hadoopConf.set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
+
+    hadoopConf.set("fs.s3n.awsAccessKeyId", awsAccessKeyId)
+
+    hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
+
 
     val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -2)
