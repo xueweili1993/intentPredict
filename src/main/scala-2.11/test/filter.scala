@@ -139,7 +139,7 @@ object filter {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select title from ad where is_deleted == 0"
+    val sqlcmd = "select title from ad where is_deleted = 0"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
