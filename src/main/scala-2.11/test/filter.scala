@@ -38,7 +38,7 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///gaoy/searchWord/part-00000"
+    val hdfspath = "hdfs:///lxw/awsdata/*"
     val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
@@ -80,12 +80,18 @@ object filter {
 
     val broadtitle = sc.broadcast(title)
 
-    val litedata = getdata.AwsData2process(sc)
+   // val litedata = getdata.AwsData2process(sc)
 
 
 
-    val mydata = litedata
+   // val mydata = litedata
+      val mydata = sc.textFile(hdfspath)
+       .map {case line =>
 
+           val kk = line. replaceAll ("\\(|\\)","")
+           val linearray = kk.split(",")
+         (linearray(0),linearray(1))
+       }
 
       .reduceByKey(_+","+_)
       .map { case (id, text)=>
