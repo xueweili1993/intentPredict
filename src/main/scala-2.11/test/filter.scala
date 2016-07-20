@@ -89,12 +89,13 @@ object filter {
        .map {case line =>
 
            val kk = line. replaceAll ("\\(|\\)","")
-           val linearray = kk.split(",")
+           /*val linearray = kk.split(",")
          if (linearray.length>1) {
            (linearray(0), linearray(1))
          }else{
            (linearray(0),"")
-         }
+         }*/
+         kk
        }
 
       /*.reduceByKey(_+","+_)
