@@ -43,7 +43,7 @@ object getdata {
     //val path = "hdfs:///gaoy/searchWord/part-00000"
     //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val savepath = "hdfs:///lxw/awsdata/*"
+    val savepath = "hdfs:///lxw/awsdata"
 
     HDFS.removeFile(savepath)
 
@@ -59,7 +59,9 @@ object getdata {
     val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
 
-    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+    //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+
+    val path = "s3n://emojikeyboardlite/event/2016071*/*"
 
     println("gyy-log path " + path)
 
