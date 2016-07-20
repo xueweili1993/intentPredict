@@ -44,16 +44,16 @@ object getdata {
 
     //modified by Gao Yuan. 2016-07-11. The ad log data has been backed up in hdfs first.
     //val path = "hdfs:///gaoy/searchWord/part-00000"
-   // val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val path = "hdfs:///lxw/awsdata/*"
-    val savepath = "hdfs:///lxw/test1"
+    val savepath = "hdfs:///lxw/awsdata/*"
+    //val savepath = "hdfs:///lxw/test1"
 
     HDFS.removeFile(savepath)
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      /*.flatMap{x =>
+      .flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -63,7 +63,7 @@ object getdata {
         else{
           None
         }
-      }*/
+      }
         .flatMap{case line=>
 
             val linearray = line.split("\t")
