@@ -44,12 +44,29 @@ object filter {
     val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
 
+
+
     val title = findtitle(sc)
 
       .map{case line =>
 
         line.replaceAll("[^a-z1-9]"," ").replaceAll(" +"," ").trim
       }
+        .map{case line=>
+            val linearray = line.split(" ")
+            if (linearray.length>3)
+              {
+                var ll = ""
+                for (i<-0 to 2)
+                  {
+                    ll = ll+ " "+linearray(i)
+                  }
+                ll
+              }
+            else {
+              line
+            }
+        }
         .filter{case line =>
 
           val linearray = line.split(" ")
@@ -57,11 +74,11 @@ object filter {
         }
 
       .distinct()
-      //.saveAsTextFile(savepath)
-      .collect
-      .toSet
+      .saveAsTextFile(savepath)
+      /*.collect
+      .toSet*/
 
-    val broadtitle = sc.broadcast(title)
+   /* val broadtitle = sc.broadcast(title)
 
     val litedata = getdata.AwsData2process(sc)
 
@@ -99,7 +116,7 @@ object filter {
         .filter{case line=>
         line!=""
         }
-    .saveAsTextFile(savepath)
+    .saveAsTextFile(savepath)*/
 
 
 
@@ -122,7 +139,7 @@ object filter {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select title from ad"
+    val sqlcmd = "select title from ad where is_deleted == 0"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
