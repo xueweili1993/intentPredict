@@ -78,7 +78,7 @@ object getdata {
             val key_words = jobject.optString("key_words")
             val hot_words = jobject.optString("hot_words")
 
-            if (key_words!=""){
+            if (key_words!="" && key_words!="Compras"){
               Some ((id, key_words))
             }
             else if (hot_words!=""){
