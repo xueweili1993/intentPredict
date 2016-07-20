@@ -50,7 +50,7 @@ object filter {
 
       .map{case line =>
 
-        line.replaceAll("[^a-z1-9]"," ").replaceAll(" +"," ").trim
+        line.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
       }
         .map{case line=>
             val linearray = line.split(" ")
