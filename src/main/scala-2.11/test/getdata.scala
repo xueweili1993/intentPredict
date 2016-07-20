@@ -29,19 +29,32 @@ object getdata {
 
 
     val caltoday = Calendar.getInstance()
-    caltoday.add(Calendar.HOUR, -1)
-    val date = new SimpleDateFormat("yyyyMMddHH").format(caltoday.getTime())
+    caltoday.add(Calendar.DATE, -2)
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
     //    val path = "s3n://xinmei-ad-log/ad/ad.log.skip*."+date
 
     //modified by Gao Yuan. 2016-07-11. The ad log data has been backed up in hdfs first.
-    val path = "hdfs:///gaoy/searchWord/part-00000"
+    //val path = "hdfs:///gaoy/searchWord/part-00000"
+    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+
     val savepath = "hdfs:///lxw/awsdata"
 
     HDFS.removeFile(savepath)
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
+      .flatMap{x =>
+        if (x.contains("key_words")){
+          Some(x)
+        }
+        else if (x.contains("hot_words" )){
+          Some(x)
+        }
+        else{
+          None
+        }
+      }
 
       .saveAsTextFile(savepath)
 
