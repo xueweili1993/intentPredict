@@ -81,8 +81,11 @@ object getdata {
             if (key_words!=""){
               Some ((id, key_words))
             }
-            else {
+            else if (hot_words!=""){
               Some ((id, hot_words))
+            }
+            else{
+              None
             }
           }
             catch{
