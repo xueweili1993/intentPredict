@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 import org.apache.spark.{SparkConf, SparkContext}
+import org.json.JSONObject
+
 
 /**
   * Created by xinmei on 16/7/13.
@@ -42,15 +44,16 @@ object getdata {
 
     //modified by Gao Yuan. 2016-07-11. The ad log data has been backed up in hdfs first.
     //val path = "hdfs:///gaoy/searchWord/part-00000"
-    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+   // val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val savepath = "hdfs:///lxw/awsdata"
+    val path = "hdfs:///lxw/awsdata/*"
+    val savepath = "hdfs:///lxw/test1"
 
     HDFS.removeFile(savepath)
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      .flatMap{x =>
+      /*.flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -60,7 +63,35 @@ object getdata {
         else{
           None
         }
-      }
+      }*/
+        .flatMap{case line=>
+
+            val linearray = line.split("\t")
+
+          try {
+
+            // val jarray = linearray(6)
+            val jobject = new JSONObject(linearray(6))
+
+            val id = linearray(0)
+
+            val key_words = jobject.optString("key_words")
+            val hot_words = jobject.optString("hot_words")
+
+            if (key_words!=""){
+              Some ((id, key_words))
+            }
+            else {
+              Some ((id, hot_words))
+            }
+          }
+            catch{
+              case _: Throwable =>
+
+                None
+            }
+
+        }
 
       .saveAsTextFile(savepath)
 
