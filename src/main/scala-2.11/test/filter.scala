@@ -69,16 +69,7 @@ object filter {
 
     val mydata = litedata
 
-     /* sc.textFile(hdfspath)
 
-      .flatMap {case line =>
-
-          val linearray = line.replaceAll("\\(|\\)","").split(",",4)
-        if (linearray.length>3 && linearray(3)!="")
-          Some((linearray(0),linearray(1)),linearray(3))
-        else
-          None
-      }*/
       .reduceByKey(_+","+_)
       .map { case (id, text)=>
 
@@ -87,7 +78,7 @@ object filter {
       }
 
 
-      /*.flatMap{case (id, textwords)=>
+      .flatMap{case (id, textwords)=>
 
           val titles = broadtitle.value
 
@@ -107,7 +98,7 @@ object filter {
         }
         .filter{case line=>
         line!=""
-        }*/
+        }
     .saveAsTextFile(savepath)
 
 
