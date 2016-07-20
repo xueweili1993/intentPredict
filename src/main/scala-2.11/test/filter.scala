@@ -99,7 +99,7 @@ object filter {
           title.map{case pattern=>
 
 
-            val sign = fuzzymatch(textwords,pattern,1)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,1)
 
             if (sign){
               pattern+ ":"+ textwords
