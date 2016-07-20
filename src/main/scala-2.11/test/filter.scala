@@ -93,7 +93,7 @@ object filter {
          (linearray(0),linearray(1))
        }
 
-      .reduceByKey(_+","+_)
+      /*.reduceByKey(_+","+_)
       .map { case (id, text)=>
 
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
@@ -121,7 +121,7 @@ object filter {
         }
         .filter{case line=>
         line!=""
-        }
+        }*/
     .saveAsTextFile(savepath)
 
 
