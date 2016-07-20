@@ -61,10 +61,10 @@ object filter {
                   {
                     ll = ll+ " "+linearray(i)
                   }
-                ll
+                ll.trim
               }
             else {
-              line
+              line.trim
             }
         }
         .filter{case line =>
