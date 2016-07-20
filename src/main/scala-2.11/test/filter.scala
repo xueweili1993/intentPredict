@@ -74,11 +74,11 @@ object filter {
         }
 
       .distinct()
-      .saveAsTextFile(savepath)
-      /*.collect
-      .toSet*/
+      //.saveAsTextFile(savepath)
+      .collect
+      .toSet
 
-   /* val broadtitle = sc.broadcast(title)
+    val broadtitle = sc.broadcast(title)
 
     val litedata = getdata.AwsData2process(sc)
 
@@ -116,7 +116,7 @@ object filter {
         .filter{case line=>
         line!=""
         }
-    .saveAsTextFile(savepath)*/
+    .saveAsTextFile(savepath)
 
 
 
