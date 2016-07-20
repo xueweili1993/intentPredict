@@ -63,18 +63,13 @@ object filter {
 
     val broadtitle = sc.broadcast(title)
 
-   /* val Stop = sc.textFile(stopwords)
-      .map {case line =>
-
-        line.trim()
-      }
-        .collect
-    .toSet
-    val broadstop = sc.broadcast(Stop)*/
+    val litedata = getdata.AwsData2process(sc)
 
 
 
-    val mydata = sc.textFile(hdfspath)
+    val mydata = litedata
+
+     /* sc.textFile(hdfspath)
 
       .flatMap {case line =>
 
@@ -83,7 +78,7 @@ object filter {
           Some((linearray(0),linearray(1)),linearray(3))
         else
           None
-      }
+      }*/
       .reduceByKey(_+","+_)
       .map { case (id, text)=>
 
@@ -92,7 +87,7 @@ object filter {
       }
 
 
-      .flatMap{case (id, textwords)=>
+      /*.flatMap{case (id, textwords)=>
 
           val titles = broadtitle.value
 
@@ -112,7 +107,7 @@ object filter {
         }
         .filter{case line=>
         line!=""
-        }
+        }*/
     .saveAsTextFile(savepath)
 
 
