@@ -90,7 +90,11 @@ object filter {
 
            val kk = line. replaceAll ("\\(|\\)","")
            val linearray = kk.split(",")
-         (linearray(0),linearray(1))
+         if (linearray.length>1) {
+           (linearray(0), linearray(1))
+         }else{
+           (linearray(0),"")
+         }
        }
 
       /*.reduceByKey(_+","+_)
