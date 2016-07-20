@@ -36,11 +36,7 @@ object StringCompare {
 
     val Bmap = B.toMap
 
-    /* Bmap.foreach(x=>
 
-       println(x)
-     )
-     print("\n")*/
 
     val R = new Array[Int](k+1)
     for (i<- 0 to k){
@@ -48,10 +44,9 @@ object StringCompare {
       R(i) = pow(2.0,i).toInt-1
     }
 
-    // showarray(R)
 
     var sign = false
-    var pos = ""
+    //var pos = ""
 
 
     for (position<- 0 to tl-1) {
@@ -78,22 +73,18 @@ object StringCompare {
         R(i) = Rnew
       }
 
-      /*println (getstatus+" "+ targetchar)
 
-      showarray(R)
-
-      print("\n")*/
 
       if((pow(2,pl-1).toInt & Rnew )!=0){
 
         println ("yes"+" "+ targetchar)
 
         sign = true
-        pos = target.substring(max(0,position-pl+1), position+1)
+        //pos = target.substring(max(0,position-pl+1), position+1)
 
       }
     }
-    (sign,pos)
+    sign
 
   }
 
