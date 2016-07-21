@@ -138,9 +138,9 @@ object filter {
 
            (id,textwords,adidlist.toArray.mkString(","))
         }
-        /*.filter{case line=>
-        line!=""
-        }*/
+        .filter{case (id,textwords,adidlist)=>
+        adidlist!=""
+        }
     .saveAsTextFile(savepath)
 
 
