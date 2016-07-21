@@ -84,21 +84,20 @@ object filter {
         .map{case (title, adlist)=>
 
             val newsequence = adlist.toArray.sortWith(_._2>_._2)(0)
-          (title, newsequence)
+          (title, newsequence._1)//(title adid)
         }
 
-      .saveAsTextFile(savepath)
-     /* .collect
+      //.saveAsTextFile(savepath)
+      .collect
       .toSet
 
     val broadtitle = sc.broadcast(title)
-*/
    // val litedata = getdata.AwsData2process(sc)
 
 
 
    // val mydata = litedata
-      /*val mydata = sc.textFile(hdfspath)
+      val mydata = sc.textFile(hdfspath)
        .flatMap {case line =>
 
            val kk = line. replaceAll ("\\(|\\)","")
@@ -119,28 +118,30 @@ object filter {
       }
 
 
-      .flatMap{case (id, textwords)=>
+      .map{case (id, textwords)=>
 
           val titles = broadtitle.value
+          val adidlist  = new ArrayBuffer[String]()
 
-          title.map{case pattern=>
+          title.map{case (pattern,adid)=>
 
 
             val sign = StringCompare.fuzzymatch(textwords,pattern,1)
 
+
             if (sign){
-              pattern+ ":"+ textwords
-            }
-            else{
-              ""
+              adidlist += adid
             }
 
+
           }
+
+           (id,textwords,adidlist.toArray.mkString(","))
         }
-        .filter{case line=>
+        /*.filter{case line=>
         line!=""
-        }
-    .saveAsTextFile(savepath)*/
+        }*/
+    .saveAsTextFile(savepath)
 
 
 
