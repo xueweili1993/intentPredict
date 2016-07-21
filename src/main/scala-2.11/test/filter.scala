@@ -135,8 +135,9 @@ object filter {
 
 
           }
+           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length)
 
-           (id,textwords,adidlist.toArray.mkString(","))
+           (id,textwords,newlist.mkString(","))
         }
         .filter{case (id,textwords,adidlist)=>
         adidlist!=""
