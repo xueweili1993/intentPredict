@@ -121,7 +121,7 @@ object filter {
       .map{case (id, textwords)=>
 
           val titles = broadtitle.value
-          val adidlist  = new ArrayBuffer[String]()
+          val adidlist  = new ArrayBuffer[(String,String)]()
 
           title.map{case (pattern,adid)=>
 
@@ -130,7 +130,7 @@ object filter {
 
 
             if (sign){
-              adidlist += adid
+              adidlist += ((adid,pattern))
             }
 
 
