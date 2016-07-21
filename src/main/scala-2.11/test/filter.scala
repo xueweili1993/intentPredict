@@ -173,7 +173,9 @@ object filter {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select title, id, payout from ad where is_deleted = 0"
+    //val sqlcmd = "select title, id, payout from ad where is_deleted = 0"
+
+    val sqlcmd = "SELECT ad.title,ad.id,ad.payout FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>

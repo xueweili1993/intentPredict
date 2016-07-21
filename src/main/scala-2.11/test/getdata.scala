@@ -43,7 +43,7 @@ object getdata {
     //val path = "hdfs:///gaoy/searchWord/part-00000"
     //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val savepath = "hdfs:///lxw/awsdata"
+    val savepath = "hdfs:///lxw/awsdata1"
 
     HDFS.removeFile(savepath)
 
@@ -61,12 +61,12 @@ object getdata {
 
     //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val path = "s3n://emojikeyboardlite/event/2016071*/*"
+    val path = "s3n://emojikeyboardlite/event/20160719/*"
 
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      .flatMap{x =>
+     /* .flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -107,7 +107,7 @@ object getdata {
             None
         }
 
-      }
+      }*/
 
       adlog
   }
