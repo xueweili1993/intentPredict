@@ -135,20 +135,24 @@ object filter {
 
 
           }
-           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length)
+           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=> x._1)
 
            (id,newlist)
         }
         .filter{case (id,adidlist)=>
                 adidlist.nonEmpty
+
         }
-       .map{case (id,adidlist)=>
+      .collect
+
+
+       /*.map{case (id,adidlist)=>
 
          (id,adidlist.mkString(","))
-       }
-    .saveAsTextFile(savepath)
+       }*/
+   // .saveAsTextFile(savepath)
 
-
+    save2redis(mydata)
 
   }
 
