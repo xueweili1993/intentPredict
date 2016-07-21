@@ -137,11 +137,15 @@ object filter {
           }
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length)
 
-           (id,textwords,newlist.mkString(","))
+           (id,newlist)
         }
-        .filter{case (id,textwords,adidlist)=>
-        adidlist!=""
+        .filter{case (id,adidlist)=>
+                adidlist.nonEmpty
         }
+       .map{case (id,adidlist)=>
+
+         (id,adidlist.mkString(","))
+       }
     .saveAsTextFile(savepath)
 
 
