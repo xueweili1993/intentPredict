@@ -83,7 +83,7 @@ object filter {
         .groupByKey
         .map{case (title, adlist)=>
 
-            val newsequence = adlist.toArray.sortBy(_._2).mkString(",")
+            val newsequence = adlist.toArray.sortWith(_._2>_._2).mkString(",")
           (title, newsequence)
         }
       .distinct()
