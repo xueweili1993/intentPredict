@@ -24,5 +24,8 @@ libraryDependencies += "com.amazonaws" % "aws-java-sdk" % "1.11.0" % "provided"
 libraryDependencies += "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4"
 
 
+// https://mvnrepository.com/artifact/redis.clients/jedis
+libraryDependencies += "redis.clients" % "jedis" % "2.8.1"
+
 
 
