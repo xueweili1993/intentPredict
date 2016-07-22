@@ -29,7 +29,7 @@ object newData {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val path  = "s3n://emojikeyboardlite/word/20160720/language=en_*/*"
+    val path  = "hdfs:///lxw/word0/*"
     val savepath  = "hdfs:///lxw/test2"
 
     HDFS.removeFile(savepath)
@@ -42,7 +42,7 @@ object newData {
       }
       .reduceByKey(_+_)
       .repartition(95)
-      .filter(x => x._2 > 1)
+      .filter(x => x._2 > 4)
         //.repartition(95)
       .collect()
       .sortWith(_._2 > _._2)
