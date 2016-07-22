@@ -47,18 +47,33 @@ object getdata {
     //val path = "hdfs:///gaoy/searchWord/part-00000"
     //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val savepath = "hdfs:///lxw/awsdata1"
+
+
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -2)
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+
+    val ltvpath = "s3n://emojikeyboardlite/ltv/"+date+"/*"
+
+    val eventpath = "s3n://emojikeyboardlite/event/"+date+"/*"
+
+    val savepath = "hdfs:///lxw/fuzzymatch/"+date
 
     HDFS.removeFile(savepath)
 
-
     //=====duid, countryCode, gaid, aid====
-    val Metacountry = AwsMeta(sc)
+    val Metacountry = AwsMeta(sc,ltvpath)
 
 
     //======id, hot_words=======
 
-    val DataWithCountry = AwsData2process (sc:SparkContext)
+    val DataWithCountry = AwsData2process (sc:SparkContext,eventpath)
+      .reduceByKey(_+","+_)
+      .map { case (id, text)=>
+
+        val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
+        (id, newtext.toLowerCase)
+      }
       .join(Metacountry)
       .map {case (duid, (hot_words,(countryCode,gaid,aid)))=>
 
@@ -67,18 +82,13 @@ object getdata {
       .saveAsTextFile(savepath)
 
 
-
-
-
   }
 
 
-  def AwsMeta (sc:SparkContext)={
-    val caltoday = Calendar.getInstance()
-    caltoday.add(Calendar.DATE, -2)
-    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
-    val path = "s3n://emojikeyboardlite/ltv/"+date+"/*"
+
+  def AwsMeta (sc:SparkContext,path:String)={
+
 
     println("gyy-log path " + path)
 
@@ -99,7 +109,7 @@ object getdata {
                 None
               }
               else{
-                Some((duid,( ip,gaid,aid)))
+                Some((duid,( ip,gaid.trim,aid.trim)))
               }
             }
           else{
@@ -138,15 +148,8 @@ object getdata {
 
 
 
-  def AwsData2process (sc:SparkContext)={
-    val caltoday = Calendar.getInstance()
-    caltoday.add(Calendar.DATE, -2)
-    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+  def AwsData2process (sc:SparkContext,path:String)={
 
-
-    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
-
-    //val path = "s3n://emojikeyboardlite/event/20160719/*"
 
     println("gyy-log path " + path)
 

@@ -110,12 +110,12 @@ object filter {
          //kk
        }
 
-      .reduceByKey(_+","+_)
+     /* .reduceByKey(_+","+_)
       .map { case (id, text)=>
 
          val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
         (id, newtext.toLowerCase)
-      }
+      }*/
 
 
       .map{case (id, textwords)=>
