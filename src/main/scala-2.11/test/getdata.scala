@@ -95,15 +95,17 @@ object getdata {
         .fullOuterJoin(DataFKey)
         .map{case (id,(text1,text2))=>
 
-            if (text1==""){
-              (id, text2)
+          val t1 = text1 match {
+
+              case Some(x)=> x
+              case None => ""
             }
-            else if(text2 == ""){
-              (id, text1)
+            val t2 = text2 match {
+
+              case Some(x)=> x
+              case None => ""
             }
-            else{
-              (id, text1+" "+text2)
-            }
+          (id, t1+" "+t2)
         }
         .join(Metacountry)
         .map { case (duid, (hot_words, (countryCode, gaid, aid))) =>
