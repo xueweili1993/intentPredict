@@ -1,7 +1,8 @@
 package test
 
 import java.sql.DriverManager
-import java.util.Comparator
+import java.text.SimpleDateFormat
+import java.util.{Calendar, Comparator}
 
 import breeze.linalg.min
 import com.rockymadden.stringmetric.similarity.{DiceSorensenMetric, JaroMetric}
@@ -53,7 +54,6 @@ object filter {
 
 
 
-
     val title = TitleWithCountryAdid(sc)
 
       .map{case (title, id, payout,country) =>
@@ -96,8 +96,8 @@ object filter {
 
     val broadtitle = sc.broadcast(title)
 
-
-    val mydata = sc.textFile(hdfspath)
+    println("lxw "+makepath())
+    val mydata = sc.textFile(makepath())
        .flatMap {case line =>
 
          val linearray = line.split("\t")
@@ -215,6 +215,24 @@ object filter {
 
   }
 
+
+  def makepath()={
+
+    val allpath = new ArrayBuffer[String]()
+
+    for (i<- 2 to 28) {
+      val caltoday = Calendar.getInstance()
+      caltoday.add(Calendar.DATE, -i)
+      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+      val tempath= "hdfs:///lxw/fuzzymatch/"+date+"/*"
+
+      if (HDFS.existFile(tempath)){
+        allpath += tempath
+      }
+
+    }
+    allpath.toArray.mkString(",")
+  }
 
 
 
