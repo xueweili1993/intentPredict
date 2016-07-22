@@ -91,7 +91,7 @@ object getdata {
 
   def GetHistoryData (sc:SparkContext)={
 
-    for (i<-2 to 16) {
+    for (i<-17 to 32) {
       val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -i)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
