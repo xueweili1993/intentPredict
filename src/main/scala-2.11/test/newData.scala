@@ -34,20 +34,26 @@ object newData {
 
     HDFS.removeFile(savepath)
 
+    val appset = Array("com.android.chrome","com.google.android.youtube","com.android.browser","com.supercell.clashofclans" ,
+      "com.sec.android.app.sbrowser","com.google.android.googlequicksearchbox","com.android.vending",
+    "com.ea.gp.nbamobile","com.UCMobile.intl","com.google.android.apps.maps","com.ebay.mobile","com.uc.browser.en",
+    "com.lenovo.ideafriend","com.sec.android.app.clockpackage","com.ea.game.maddenmobile15_row")
+      .toSet
+
     val data = sc.textFile(path)
       .map {case line =>
 
-          val linearray = line.split("\t")
-        (linearray(0),1)
+        val linearray = line.split("\t")
+        val appname  = linearray(0)
+        val usertext = linearray (1)
+        val duid  = linearray(2)
+        (duid,appname,usertext)
       }
-      .reduceByKey(_+_)
+      .filter{case (duid,appname,usertext)=>
 
-      .collect()
-      .sortWith(_._2 > _._2)
-
-    for(haha <- data){
-      println("xuewei " + haha)
-    }
+          appset.contains(appname)
+      }
+      .saveAsTextFile(savepath)
 
 
 
