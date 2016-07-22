@@ -49,17 +49,17 @@ object getdata {
 
 
 
-    val caltoday = Calendar.getInstance()
-    caltoday.add(Calendar.DATE, -2)
-    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+   // val caltoday = Calendar.getInstance()
+   // caltoday.add(Calendar.DATE, -2)
+   // val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
-    val ltvpath = "s3n://emojikeyboardlite/ltv/"+date+"/*"
+    //val ltvpath = "s3n://emojikeyboardlite/ltv/"+date+"/*"
 
-    val eventpath = "s3n://emojikeyboardlite/event/"+date+"/*"
+   // val eventpath = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val savepath = "hdfs:///lxw/fuzzymatch/"+date
+    //val savepath = "hdfs:///lxw/fuzzymatch/"+date
 
-    HDFS.removeFile(savepath)
+    /*HDFS.removeFile(savepath)
 
     //=====duid, countryCode, gaid, aid====
     val Metacountry = AwsMeta(sc,ltvpath)
@@ -80,8 +80,51 @@ object getdata {
           gaid+"_"+aid+"\t"+countryCode+"\t"+hot_words
       }
       .repartition(1)
-      .saveAsTextFile(savepath)
+      .saveAsTextFile(savepath)*/
 
+    GetHistoryData(sc)
+
+
+
+
+  }
+
+  def GetHistoryData (sc:SparkContext)={
+
+    for (i<-2 to 16) {
+      val caltoday = Calendar.getInstance()
+      caltoday.add(Calendar.DATE, -i)
+      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+
+      val ltvpath = "s3n://emojikeyboardlite/ltv/" + date + "/*"
+
+      val eventpath = "s3n://emojikeyboardlite/event/" + date + "/*"
+
+      val savepath = "hdfs:///lxw/fuzzymatch/" + date
+
+      HDFS.removeFile(savepath)
+
+      //=====duid, countryCode, gaid, aid====
+      val Metacountry = AwsMeta(sc, ltvpath)
+
+
+      //======id, hot_words=======
+
+      val DataWithCountry = AwsData2process(sc: SparkContext, eventpath)
+        .reduceByKey(_ + "," + _)
+        .map { case (id, text) =>
+
+          val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
+          (id, newtext.toLowerCase)
+        }
+        .join(Metacountry)
+        .map { case (duid, (hot_words, (countryCode, gaid, aid))) =>
+
+          gaid + "_" + aid + "\t" + countryCode + "\t" + hot_words
+        }
+        .repartition(1)
+        .saveAsTextFile(savepath)
+    }
 
   }
 
