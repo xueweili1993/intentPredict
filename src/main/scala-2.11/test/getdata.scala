@@ -118,6 +118,8 @@ object getdata {
               case Some(x1) => countryCode = x1
               case None =>
             }
+
+          case None =>
         }
         (duid, countryCode, gaid, oid)
       }
