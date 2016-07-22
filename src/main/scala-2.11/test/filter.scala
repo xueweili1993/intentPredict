@@ -45,7 +45,7 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///lxw/fuzzymatch/20160719/*"
+    val hdfspath = "hdfs:///lxw/fuzzymatch/20160720/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
@@ -97,7 +97,7 @@ object filter {
     val broadtitle = sc.broadcast(title)
 
     println("lxw "+makepath())
-    val mydata = sc.textFile(makepath())
+    val mydata = sc.textFile(hdfspath)
        .flatMap {case line =>
 
          val linearray = line.split("\t")
