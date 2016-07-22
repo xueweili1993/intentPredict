@@ -132,9 +132,9 @@ object filter {
           }
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
 
-           (id,countryCode,newlist)
+           (id,countryCode,textwords,newlist)
         }
-        .filter{case (id,countryCode,adidlist)=>
+        .filter{case (id,countryCode,textwords,adidlist)=>
                 adidlist.nonEmpty
 
         }
