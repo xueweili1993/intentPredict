@@ -167,7 +167,7 @@ object filter {
     val adinfo = new ArrayBuffer[(String, String,Double, String)]()
 
     while(rs.next){
-      val title = rs.getString(1)
+      val title = rs.getString(1).toLowerCase()
       val adid = rs.getString(2)
       val payout = rs.getString(3).toDouble
       val country = rs.getString(4)
