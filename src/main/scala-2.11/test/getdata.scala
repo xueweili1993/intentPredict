@@ -51,11 +51,23 @@ object getdata {
 
     HDFS.removeFile(savepath)
 
-    /*AwsData2process (sc:SparkContext)
-      .saveAsTextFile(savepath)*/
 
-    AwsMeta(sc)
+    //=====duid, countryCode, gaid, aid====
+    val Metacountry = AwsMeta(sc)
+
+
+    //======id, hot_words=======
+
+    val DataWithCountry = AwsData2process (sc:SparkContext)
+      .join(Metacountry)
+      .map {case (duid, (hot_words,(countryCode,gaid,aid)))=>
+
+          gaid+"_"+aid+"\t"+countryCode+"\t"+hot_words
+      }
       .saveAsTextFile(savepath)
+
+
+
 
 
   }
@@ -81,13 +93,13 @@ object getdata {
               val gaid = linearray(3)
 
 
-              val oid  = linearray(4)
+              val aid  = linearray(4)
 
-              if (gaid == "" || oid ==""){
+              if (gaid == "" || aid ==""){
                 None
               }
               else{
-                Some((duid, ip,gaid,oid))
+                Some((duid,( ip,gaid,aid)))
               }
             }
           else{
@@ -99,7 +111,7 @@ object getdata {
 
       val geoIp = MaxMindIpGeo("GeoIP2-City.mmdb", 1000)
 
-      rows.map{ case (duid,netIP,gaid,oid)=>
+      rows.map{ case (duid,(netIP,gaid,aid))=>
 
 
         val location = geoIp.getLocation(netIP)
@@ -117,12 +129,14 @@ object getdata {
 
           case None =>
         }
-        (duid, countryCode, gaid, oid)
+        (duid, (countryCode, gaid, aid))
       }
     }
 
      userinfor
   }
+
+
 
   def AwsData2process (sc:SparkContext)={
     val caltoday = Calendar.getInstance()
