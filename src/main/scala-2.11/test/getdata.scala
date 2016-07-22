@@ -71,28 +71,24 @@ object getdata {
     println("gyy-log path " + path)
 
     val userinfor = sc.textFile(path)
-     /* .flatMap{case line =>
+      .flatMap{case line =>
 
           val linearray  = line.split("\t")
           if (linearray.length>4)
             {
               val duid = linearray(0)
               val ip = linearray(1)
-              val gaid = {
-                if (linearray(3) == "")
-                  "00000000-0000-0000-0000-000000000000"
-                else
-                  linearray(3)
-              }
+              val gaid = linearray(3)
 
-              val oid  = {
-                if (linearray(4) == "")
-                  "0000000000000000"
-                else
-                  linearray(4)
-              }
 
-              Some((duid, ip,gaid,oid))
+              val oid  = linearray(4)
+
+              if (gaid == "" || oid ==""){
+                None
+              }
+              else{
+                Some((duid, ip,gaid,oid))
+              }
             }
           else{
             None
@@ -123,7 +119,7 @@ object getdata {
         }
         (duid, countryCode, gaid, oid)
       }
-    }*/
+    }
 
      userinfor
   }
