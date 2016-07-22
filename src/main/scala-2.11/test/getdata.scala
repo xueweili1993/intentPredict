@@ -60,7 +60,7 @@ object getdata {
 
   def GetHistoryData (sc:SparkContext)={
 
-    for (i<-17 to 32) {
+    for (i<-2 to 2) {
       val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -i)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
@@ -71,10 +71,16 @@ object getdata {
 
       val savepath = "hdfs:///lxw/fuzzymatch/" + date
 
+      val keyboardpath = "s3n://emojikeyboardlite/word/"+date+"/language=en_*/*"
+
       HDFS.removeFile(savepath)
 
       //=====duid, countryCode, gaid, aid====
       val Metacountry = AwsMeta(sc, ltvpath)
+
+      //=====id, text============
+
+      val DataFKey = AwsDataFKey(sc,keyboardpath)
 
 
       //======id, hot_words=======
@@ -86,6 +92,19 @@ object getdata {
           val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
           (id, newtext.toLowerCase)
         }
+        .fullOuterJoin(DataFKey)
+        .map{case (id,(text1,text2))=>
+
+            if (text1==""){
+              (id, text2)
+            }
+            else if(text2 == ""){
+              (id, text1)
+            }
+            else{
+              (id, text1+" "+text2)
+            }
+        }
         .join(Metacountry)
         .map { case (duid, (hot_words, (countryCode, gaid, aid))) =>
 
@@ -94,6 +113,8 @@ object getdata {
         .repartition(1)
         .saveAsTextFile(savepath)
     }
+
+
 
   }
 
@@ -211,6 +232,39 @@ object getdata {
       }
 
       adlog
+  }
+
+
+  def AwsDataFKey (sc:SparkContext, path: String)={
+
+    val appset = Array("com.android.chrome","com.google.android.youtube","com.android.browser","com.supercell.clashofclans" ,
+      "com.sec.android.app.sbrowser","com.google.android.googlequicksearchbox","com.android.vending",
+      "com.ea.gp.nbamobile","com.UCMobile.intl","com.google.android.apps.maps","com.ebay.mobile","com.uc.browser.en",
+      "com.lenovo.ideafriend","com.sec.android.app.clockpackage","com.ea.game.maddenmobile15_row")
+      .toSet
+
+    val data = sc.textFile(path)
+      .map {case line =>
+
+        val linearray = line.split("\t")
+        val appname  = linearray(0)
+        val usertext = linearray (1)
+        val duid  = linearray(2)
+        (duid,appname,usertext)
+      }
+      .filter{case (duid,appname,usertext)=>
+
+        appset.contains(appname)
+      }
+      .map(x=> (x._1,x._3))
+      .reduceByKey(_ + " " + _)
+      .map { case (id, text) =>
+
+        val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
+        (id, newtext.toLowerCase)
+      }
+    data
+
   }
 
 
