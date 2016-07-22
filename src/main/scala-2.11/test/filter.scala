@@ -1,5 +1,6 @@
 package test
 
+import java.sql.DriverManager
 import java.util.Comparator
 
 import breeze.linalg.min
@@ -53,7 +54,7 @@ object filter {
 
 
 
-    val title = findtitle(sc)
+    val title = TitleWithCountryAdid(sc)
 
       .map{case (title, id, payout,country) =>
 
@@ -168,7 +169,7 @@ object filter {
 
     //val sqlcmd = "select title, id, payout from ad where is_deleted = 0"
 
-    val sqlcmd = "SELECT ad.title,ad.id,ad.payout, ad_country.country FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
+    val sqlcmd = "SELECT ad.title,ad.id,ad.payout,ad_country.country FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
@@ -184,6 +185,44 @@ object filter {
 
   }
 
+
+  def TitleWithCountryAdid(sc: SparkContext)={
+
+
+    val sqlcmd = "SELECT ad.title,ad.id,ad.payout,ad_country.country FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
+
+    val conn = DriverManager.getConnection("jdbc:mysql://172.31.27.7/koala","aduser3", "VbhaYja_eErJ")
+
+    if (!conn.isClosed())
+    {
+      println("\tSucceeded connecting to the Database!\n")
+    }
+
+    val stmt = conn.createStatement()
+    val rs = stmt.executeQuery(sqlcmd)
+
+    val adinfo = new ArrayBuffer[(String, String,Double, String)]()
+
+    while(rs.next){
+      val title = rs.getString(1)
+      val adid = rs.getString(2)
+      val payout = rs.getString(3).toDouble
+      val country = rs.getString(4)
+
+      adinfo += ((title, adid, payout, country))
+    }
+
+
+    val rddadinfo = sc.parallelize(adinfo)
+
+
+
+    rs.close()
+    stmt.close()
+    conn.close()
+
+    rddadinfo
+  }
 
   def save2redis(user2adlist:Array[(String,Array[String])])={
 
