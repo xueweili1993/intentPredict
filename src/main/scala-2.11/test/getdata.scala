@@ -47,26 +47,44 @@ object getdata {
 
     HDFS.removeFile(savepath)
 
-    AwsData2process (sc:SparkContext)
+    /*AwsData2process (sc:SparkContext)
+      .saveAsTextFile(savepath)*/
+
+    AwsMeta(sc)
       .saveAsTextFile(savepath)
 
 
+  }
+
+
+  def AwsMeta (sc:SparkContext)={
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -2)
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+
+    val path = "s3n://emojikeyboardlite/ltv/"+date+"/*"
+
+    println("gyy-log path " + path)
+
+    sc.textFile(path)
+
 
   }
+
   def AwsData2process (sc:SparkContext)={
     val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -2)
     val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
 
-    //val path = "s3n://emojikeyboardlite/event/"+date+"/*"
+    val path = "s3n://emojikeyboardlite/event/"+date+"/*"
 
-    val path = "s3n://emojikeyboardlite/event/20160719/*"
+    //val path = "s3n://emojikeyboardlite/event/20160719/*"
 
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-     /* .flatMap{x =>
+      .flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -107,7 +125,7 @@ object getdata {
             None
         }
 
-      }*/
+      }
 
       adlog
   }
