@@ -29,7 +29,7 @@ object newData {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val path = "s3://emojikeyboardlite/word/20160720/language=en_*/*"
+    val path = "s3n://emojikeyboardlite/word/20160720/language=en_*/*"
     //val path  = "hdfs:///lxw/word0/*"
     val savepath  = "hdfs:///lxw/test2"
 
