@@ -79,6 +79,7 @@ object getdata {
 
           gaid+"_"+aid+"\t"+countryCode+"\t"+hot_words
       }
+      .repartition(1)
       .saveAsTextFile(savepath)
 
 
