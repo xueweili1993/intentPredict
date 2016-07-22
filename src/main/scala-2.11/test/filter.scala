@@ -226,9 +226,9 @@ object filter {
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
       val tempath= "hdfs:///lxw/fuzzymatch/"+date+"/*"
 
-      if (HDFS.existFile(tempath)){
+
         allpath += tempath
-      }
+
 
     }
     allpath.toArray.mkString(",")
