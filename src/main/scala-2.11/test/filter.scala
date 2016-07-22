@@ -55,7 +55,7 @@ object filter {
 
     val title = findtitle(sc)
 
-      .map{case (title, id, payout) =>
+      .map{case (title, id, payout,country) =>
 
         val newtitle  =  title.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
         (newtitle, id, payout)
@@ -87,7 +87,7 @@ object filter {
           (title, newsequence._1)//(title adid)
         }
 
-      //.saveAsTextFile(savepath)
+     // .saveAsTextFile(savepath)
       .collect
       .toSet
 
@@ -149,10 +149,10 @@ object filter {
        /*.map{case (id,adidlist)=>
 
          (id,adidlist.mkString(","))
-       }*/
+       }
    // .saveAsTextFile(savepath)
 
-    save2redis(mydata)
+    save2redis(mydata)*/
 
   }
 
@@ -175,16 +175,16 @@ object filter {
 
     //val sqlcmd = "select title, id, payout from ad where is_deleted = 0"
 
-    val sqlcmd = "SELECT ad.title,ad.id,ad.payout FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
+    val sqlcmd = "SELECT ad.title,ad.id,ad.payout, ad_country.country FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
         val title  = x(0).toString.toLowerCase()
         val id = x(1).toString
         val payout = x(2).toString.toDouble
+        val country = x(3).toString
 
-
-        (title, id, payout)
+        (title, id, payout, country)
       }
 
     jdbc

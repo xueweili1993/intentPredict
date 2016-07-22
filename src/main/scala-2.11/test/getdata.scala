@@ -141,7 +141,7 @@ object getdata {
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      .flatMap{x =>
+      /*.flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -182,7 +182,7 @@ object getdata {
             None
         }
 
-      }
+      }*/
 
       adlog
   }
