@@ -130,7 +130,7 @@ object filter {
 
 
           }
-           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=> x._1).mkString(",")
+           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
 
            (id,countryCode,newlist)
         }
