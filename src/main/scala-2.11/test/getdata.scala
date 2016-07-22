@@ -3,6 +3,7 @@ package test
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+import com.sanoma.cda.geoip.MaxMindIpGeo
 import org.apache.spark.{SparkConf, SparkContext}
 import org.json.JSONObject
 
@@ -18,6 +19,9 @@ object getdata {
     val conf = new SparkConf()
 
     val sc = new SparkContext(conf)
+
+    val mmdbPath = "/home/gaoyuan/userLabel/resource/GeoIP2-City.mmdb"
+    sc.addFile(mmdbPath)
 
 
 
@@ -67,22 +71,57 @@ object getdata {
     println("gyy-log path " + path)
 
     val userinfor = sc.textFile(path)
-      .map{case line =>
+      .flatMap{case line =>
 
           val linearray  = line.split("\t")
           if (linearray.length>4)
             {
               val duid = linearray(0)
               val ip = linearray(1)
-              val gaid = linearray(3)
-              val oid  = linearray(4)
-              (duid, ip,gaid,oid)
+              val gaid = {
+                if (linearray(3) == "")
+                  "00000000-0000-0000-0000-000000000000"
+                else
+                  linearray(3)
+              }
+
+              val oid  = {
+                if (linearray(4) == "")
+                  "0000000000000000"
+                else
+                  linearray(4)
+              }
+
+              Some((duid, ip,gaid,oid))
             }
           else{
-            ("","","","")
+            None
           }
 
       }
+      .mapPartitions{rows =>
+
+      val geoIp = MaxMindIpGeo("GeoIP2-City.mmdb", 1000)
+
+      rows.map{ case (duid,netIP,gaid,oid)=>
+
+
+        val location = geoIp.getLocation(netIP)
+
+        var countryCode = ""
+
+
+        location match {
+          case Some(x) =>
+            val ipl = x
+            ipl.countryCode match {
+              case Some(x1) => countryCode = x1
+              case None =>
+            }
+        }
+        (duid, countryCode, gaid, oid)
+      }
+    }
 
      userinfor
   }
