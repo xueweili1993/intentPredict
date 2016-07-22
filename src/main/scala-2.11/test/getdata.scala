@@ -71,7 +71,7 @@ object getdata {
     println("gyy-log path " + path)
 
     val userinfor = sc.textFile(path)
-      .flatMap{case line =>
+     /* .flatMap{case line =>
 
           val linearray  = line.split("\t")
           if (linearray.length>4)
@@ -123,7 +123,7 @@ object getdata {
         }
         (duid, countryCode, gaid, oid)
       }
-    }
+    }*/
 
      userinfor
   }
@@ -141,7 +141,7 @@ object getdata {
     println("gyy-log path " + path)
 
     val adlog = sc.textFile(path)
-      /*.flatMap{x =>
+      .flatMap{x =>
         if (x.contains("key_words")){
           Some(x)
         }
@@ -182,7 +182,7 @@ object getdata {
             None
         }
 
-      }*/
+      }
 
       adlog
   }
