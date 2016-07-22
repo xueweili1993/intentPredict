@@ -44,8 +44,8 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///lxw/awsdata/*"
-    val stopwords  = "hdfs:///lxw/stopwords"
+    val hdfspath = "hdfs:///lxw/fuzzymatch/20160719/*"
+    //val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
@@ -85,66 +85,60 @@ object filter {
         .map{case (title, adlist)=>
 
             val newsequence = adlist.toArray.sortWith(_._2>_._2)(0)
-          (title, newsequence._1)//(title adid)
+          (title._1,(title._2,newsequence._1))//(title,country,adid)
         }
-
-      .saveAsTextFile(savepath)
-      /*.collect
-      .toSet*/
-
-   // val broadtitle = sc.broadcast(title)
-   // val litedata = getdata.AwsData2process(sc)
+      .groupByKey
+      //.saveAsTextFile(savepath)
+      .collect
+      .toSet
 
 
 
-   // val mydata = litedata
-     /* val mydata = sc.textFile(hdfspath)
+    val broadtitle = sc.broadcast(title)
+
+
+    val mydata = sc.textFile(hdfspath)
        .flatMap {case line =>
 
-           val kk = line. replaceAll ("\\(|\\)","")
-           val linearray = kk.split(",")
-         if (linearray.length>1) {
-           Some((linearray(0), linearray(1)))
+         val linearray = line.split("\t")
+         if (linearray.length>2) {
+           Some((linearray(0), linearray(1),linearray(2)))
          }else{
            None
          }
-         //kk
+
        }
-
-     /* .reduceByKey(_+","+_)
-      .map { case (id, text)=>
-
-         val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-        (id, newtext.toLowerCase)
-      }*/
+        .repartition(600)
 
 
-      .map{case (id, textwords)=>
+
+      .map{case (id, countryCode,textwords)=>
 
           val titles = broadtitle.value
           val adidlist  = new ArrayBuffer[(String,String)]()
 
-          title.map{case (pattern,adid)=>
+          title.map{case (pattern,iter)=>
 
-
+            val country2adid = iter.toArray.mkString(",")
             val sign = StringCompare.fuzzymatch(textwords,pattern,1)
 
 
             if (sign){
-              adidlist += ((adid,pattern))
+
+              adidlist += ((country2adid ,pattern))
             }
 
 
           }
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=> x._1)
 
-           (id,newlist)
+           (id,countryCode,newlist)
         }
-        .filter{case (id,adidlist)=>
+        .filter{case (id,countryCode,adidlist)=>
                 adidlist.nonEmpty
 
         }
-      .collect*/
+        .saveAsTextFile(savepath)
 
 
 
@@ -152,38 +146,7 @@ object filter {
 
 
 
-  def findtitle(sc:SparkContext)={
 
-
-    //val savepath = "hdfs:///lxw/AppwithCate1"
-
-    val sqlContext = new SQLContext(sc)
-    val jdbcDF = sqlContext.read.format("jdbc").options(
-      Map("url" -> "jdbc:mysql://172.31.27.7:3306/koala?user=aduser3&password=VbhaYja_eErJ",
-        "dbtable" -> "ad",
-        "driver" -> "com.mysql.jdbc.Driver"
-      )
-    ).load()
-
-    jdbcDF.registerTempTable("ad")
-
-    //val sqlcmd = "select title, id, payout from ad where is_deleted = 0"
-
-    val sqlcmd = "SELECT ad.title,ad.id,ad.payout,ad_country.country FROM ad,ad_country WHERE is_deleted = 0 AND agency_name in ('cheetah','taptica','direct') AND can_preload in (1,2) AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
-    //val sqlcmd = "select app_id from app"
-    val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
-      .map{x =>
-        val title  = x(0).toString.toLowerCase()
-        val id = x(1).toString
-        val payout = x(2).toString.toDouble
-        val country = x(3).toString
-
-        (title, id, payout, country)
-      }
-
-    jdbc
-
-  }
 
 
   def TitleWithCountryAdid(sc: SparkContext)={
