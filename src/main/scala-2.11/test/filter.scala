@@ -58,9 +58,9 @@ object filter {
       .map{case (title, id, payout,country) =>
 
         val newtitle  =  title.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
-        (newtitle, id, payout)
+        (newtitle, id, payout,country)
       }
-        .map{case (newtitle, id, payout)=>
+        .map{case (newtitle, id, payout,country)=>
             val linearray = newtitle.split(" ")
             if (linearray.length>3)
               {
@@ -69,13 +69,13 @@ object filter {
                   {
                     ll = ll+ " "+linearray(i)
                   }
-                (ll.trim,(id,payout))
+                ((ll.trim,country),(id,payout))
               }
             else {
-              (newtitle.trim,(id,payout))
+              ((newtitle.trim,country),(id,payout))
             }
         }
-        .filter{case (newtitle,(id,payout)) =>
+        .filter{case ((newtitle,country),(id,payout)) =>
 
          // val linearray = newtitle.split(" ")
           newtitle.length<31 && newtitle.length>4
@@ -87,17 +87,17 @@ object filter {
           (title, newsequence._1)//(title adid)
         }
 
-     // .saveAsTextFile(savepath)
-      .collect
-      .toSet
+      .saveAsTextFile(savepath)
+      /*.collect
+      .toSet*/
 
-    val broadtitle = sc.broadcast(title)
+   // val broadtitle = sc.broadcast(title)
    // val litedata = getdata.AwsData2process(sc)
 
 
 
    // val mydata = litedata
-      val mydata = sc.textFile(hdfspath)
+     /* val mydata = sc.textFile(hdfspath)
        .flatMap {case line =>
 
            val kk = line. replaceAll ("\\(|\\)","")
@@ -143,16 +143,9 @@ object filter {
                 adidlist.nonEmpty
 
         }
-      .collect
+      .collect*/
 
 
-       /*.map{case (id,adidlist)=>
-
-         (id,adidlist.mkString(","))
-       }
-   // .saveAsTextFile(savepath)
-
-    save2redis(mydata)*/
 
   }
 
