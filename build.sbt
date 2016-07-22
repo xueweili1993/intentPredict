@@ -27,5 +27,8 @@ libraryDependencies += "com.rockymadden.stringmetric" % "stringmetric-core_2.11"
 // https://mvnrepository.com/artifact/redis.clients/jedis
 libraryDependencies += "redis.clients" % "jedis" % "2.8.1"
 
+libraryDependencies += "com.sanoma.cda" %% "maxmind-geoip2-scala" % "1.5.1"
+
+libraryDependencies += "com.snowplowanalytics"  %% "scala-maxmind-iplookups"  % "0.2.0"
 
 
