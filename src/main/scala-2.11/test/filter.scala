@@ -119,15 +119,22 @@ object filter {
 
           title.map{case (pattern,iter)=>
 
-            val country2adid = iter.toArray.mkString(",")
+            val country2adid = iter.toMap
             val sign = StringCompare.fuzzymatch(textwords,pattern,pattern.length/3)
 
 
             if (sign){
+              if (country2adid.contains(countryCode)){
 
-              adidlist += ((country2adid ,pattern))
+                val adid  = country2adid.get(countryCode) match{
+                  case Some(x) => x
+                  case None => ""
+                }
+
+                adidlist += ((adid, pattern))
+              }
+
             }
-
 
           }
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
