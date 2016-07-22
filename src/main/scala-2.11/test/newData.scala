@@ -41,7 +41,9 @@ object newData {
         (linearray(0),1)
       }
       .reduceByKey(_+_)
+      .repartition(95)
       .filter(x => x._2 > 1)
+        //.repartition(95)
       .collect()
       .sortWith(_._2 > _._2)
 
