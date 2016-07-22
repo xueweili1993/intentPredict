@@ -88,8 +88,8 @@ object filter {
           (title._1,(title._2,newsequence._1))//(title,country,adid)
         }
       .groupByKey
-      //.saveAsTextFile(savepath)
-      .collect
+      .saveAsTextFile(savepath)
+      /*.collect
       .toSet
 
 
@@ -138,7 +138,7 @@ object filter {
                 adidlist.nonEmpty
 
         }
-        .saveAsTextFile(savepath)
+        .saveAsTextFile(savepath)*/
 
 
 
