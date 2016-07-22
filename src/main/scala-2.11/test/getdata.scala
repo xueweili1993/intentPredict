@@ -80,7 +80,7 @@ object getdata {
       //======id, hot_words=======
 
       val DataWithCountry = AwsData2process(sc: SparkContext, eventpath)
-        .reduceByKey(_ + "," + _)
+        .reduceByKey(_ + " " + _)
         .map { case (id, text) =>
 
           val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")

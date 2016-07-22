@@ -29,7 +29,8 @@ object newData {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val path  = "hdfs:///lxw/word0/*"
+    val path = "s3://emojikeyboardlite/word/20160720/language=en_*/*"
+    //val path  = "hdfs:///lxw/word0/*"
     val savepath  = "hdfs:///lxw/test2"
 
     HDFS.removeFile(savepath)
@@ -52,6 +53,13 @@ object newData {
       .filter{case (duid,appname,usertext)=>
 
           appset.contains(appname)
+      }
+      .map(x=> (x._1,x._3))
+      .reduceByKey(_ + " " + _)
+      .map { case (id, text) =>
+
+        val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
+        (id, newtext.toLowerCase)
       }
       .saveAsTextFile(savepath)
 
