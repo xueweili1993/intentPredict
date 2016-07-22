@@ -49,38 +49,7 @@ object getdata {
 
 
 
-   // val caltoday = Calendar.getInstance()
-   // caltoday.add(Calendar.DATE, -2)
-   // val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
-    //val ltvpath = "s3n://emojikeyboardlite/ltv/"+date+"/*"
-
-   // val eventpath = "s3n://emojikeyboardlite/event/"+date+"/*"
-
-    //val savepath = "hdfs:///lxw/fuzzymatch/"+date
-
-    /*HDFS.removeFile(savepath)
-
-    //=====duid, countryCode, gaid, aid====
-    val Metacountry = AwsMeta(sc,ltvpath)
-
-
-    //======id, hot_words=======
-
-    val DataWithCountry = AwsData2process (sc:SparkContext,eventpath)
-      .reduceByKey(_+","+_)
-      .map { case (id, text)=>
-
-        val newtext = text.replaceAll("\\pP|\\pS"," ").replaceAll(" +"," ")
-        (id, newtext.toLowerCase)
-      }
-      .join(Metacountry)
-      .map {case (duid, (hot_words,(countryCode,gaid,aid)))=>
-
-          gaid+"_"+aid+"\t"+countryCode+"\t"+hot_words
-      }
-      .repartition(1)
-      .saveAsTextFile(savepath)*/
 
     GetHistoryData(sc)
 
