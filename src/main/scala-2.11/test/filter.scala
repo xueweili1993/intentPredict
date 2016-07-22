@@ -88,8 +88,8 @@ object filter {
           (title._1,(title._2,newsequence._1))//(title,country,adid)
         }
       .groupByKey
-      .saveAsTextFile(savepath)
-      /*.collect
+      //.saveAsTextFile(savepath)
+      .collect
       .toSet
 
 
@@ -120,7 +120,7 @@ object filter {
           title.map{case (pattern,iter)=>
 
             val country2adid = iter.toArray.mkString(",")
-            val sign = StringCompare.fuzzymatch(textwords,pattern,1)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,pattern.length/4)
 
 
             if (sign){
@@ -138,7 +138,7 @@ object filter {
                 adidlist.nonEmpty
 
         }
-        .saveAsTextFile(savepath)*/
+        .saveAsTextFile(savepath)
 
 
 
