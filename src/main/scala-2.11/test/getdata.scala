@@ -66,9 +66,25 @@ object getdata {
 
     println("gyy-log path " + path)
 
-    sc.textFile(path)
+    val userinfor = sc.textFile(path)
+      .map{case line =>
 
+          val linearray  = line.split("\t")
+          if (linearray.length>4)
+            {
+              val duid = linearray(0)
+              val ip = linearray(1)
+              val gaid = linearray(3)
+              val oid  = linearray(4)
+              (duid, ip,gaid,oid)
+            }
+          else{
+            ("","","","")
+          }
 
+      }
+
+     userinfor
   }
 
   def AwsData2process (sc:SparkContext)={

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.snowplowanalytics:scala-maxmind-iplookups_2.11:0.2.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.snowplowanalytics/scala-maxmind-iplookups_2.11/jars/scala-maxmind-iplookups_2.11-0.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.snowplowanalytics/scala-maxmind-iplookups_2.11/srcs/scala-maxmind-iplookups_2.11-0.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
