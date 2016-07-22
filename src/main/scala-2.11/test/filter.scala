@@ -120,7 +120,7 @@ object filter {
           title.map{case (pattern,iter)=>
 
             val country2adid = iter.toMap
-            val sign = StringCompare.fuzzymatch(textwords,pattern,pattern.length/3)
+            val sign = StringCompare.fuzzymatch(textwords,pattern,pattern.length/4)
 
 
             if (sign){
