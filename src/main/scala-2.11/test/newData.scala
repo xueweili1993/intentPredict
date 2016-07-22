@@ -41,8 +41,15 @@ object newData {
         (linearray(0),1)
       }
       .reduceByKey(_+_)
-      .sortBy(_._2)
-      .saveAsTextFile(savepath)
+      .filter(x => x._2 > 1)
+      .collect()
+      .sortWith(_._2 > _._2)
+
+    for(haha <- data){
+      println("xuewei " + haha)
+    }
+
+
 
 
 
