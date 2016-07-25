@@ -60,7 +60,7 @@ object getdata {
 
   def GetHistoryData (sc:SparkContext)={
 
-    for (i<-17 to 33) {
+    for (i<-2 to 4) {
       val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -i)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
@@ -89,8 +89,8 @@ object getdata {
         .reduceByKey(_ + " " + _)
         .map { case (id, text) =>
 
-          val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
-          (id, newtext.toLowerCase)
+          val newtext = text.toLowerCase.replaceAll("[^a-z]", " ").replaceAll(" +", " ")
+          (id, newtext)
         }
         .fullOuterJoin(DataFKey)
         .map{case (id,(text1,text2))=>
@@ -268,8 +268,8 @@ object getdata {
       .reduceByKey(_ + " " + _)
       .map { case (id, text) =>
 
-        val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
-        (id, newtext.toLowerCase)
+        val newtext = text.toLowerCase.replaceAll("[^a-z]", " ").replaceAll(" +", " ")
+        (id, newtext)
       }
     data
 
