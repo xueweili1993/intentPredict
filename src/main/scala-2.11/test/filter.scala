@@ -48,7 +48,7 @@ object filter {
     val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test1"
+    val savepath = "hdfs:///lxw/test2"
     HDFS.removeFile(savepath)
 
 
@@ -144,15 +144,35 @@ object filter {
 
           }
           val ll = adidlist.toArray.length
-           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
+           //val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
 
-           (id,countryCode,newlist,ll)
+           (id,countryCode,adidlist,ll)
         }
         .filter{case (id,countryCode,adidlist,ll)=>
                 adidlist.nonEmpty
 
         }
-        .saveAsTextFile(savepath)
+
+    mydata.map{case (id,countryCode,adidlist,ll)=>
+
+      (ll,1)
+    }
+      .reduceByKey(_+_)
+      .saveAsTextFile(savepath)
+    mydata.flatMap{case(id,countryCode,adidlist,ll)=>
+
+      adidlist.toArray.map{x=>
+        (x._2,1)
+      }
+    }
+      .reduceByKey(_+_)
+      .collect()
+      .sortWith(_._2>_._2)
+      .foreach(x=>
+
+        println("lxw logg "+ x)
+      )
+
 
 
 
