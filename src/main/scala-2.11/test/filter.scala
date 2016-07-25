@@ -151,7 +151,8 @@ object filter {
         .filter{case (id,adidlist)=>
                 adidlist.nonEmpty
         }
-      .saveAsTextFile(savepath)
+        .repartition(1)
+        .saveAsTextFile(savepath)
 
 
   }
