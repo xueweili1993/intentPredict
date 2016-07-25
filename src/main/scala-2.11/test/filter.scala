@@ -145,14 +145,15 @@ object filter {
           }
           //val ll = adidlist.toArray.length
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=>x._1)
+            .mkString(",")
 
-           (id+"_lite_themerec_facebook_ad",adidlist)
+           (id+"_lite_themerec_facebook_ad",newlist)
         }
-        .filter{case (id,adidlist)=>
-                adidlist.nonEmpty
+        .filter{case (id,newlist)=>
+                newlist.nonEmpty
         }
         .repartition(1)
-        .saveAsTextFile(savepath)
+        //.saveAsTextFile(savepath)
 
 
   }
