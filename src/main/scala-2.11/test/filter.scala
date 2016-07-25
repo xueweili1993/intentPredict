@@ -153,7 +153,7 @@ object filter {
                 newlist.nonEmpty
         }
         .repartition(1)
-        //.saveAsTextFile(savepath)
+        .saveAsTextFile(savepath)
 
 
   }
