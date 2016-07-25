@@ -50,25 +50,24 @@ object getdata {
 
 
 
-    val caltoday = Calendar.getInstance()
+    /*val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -2)
-    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())*/
 
 
-    GetHistoryData(sc,date)
+    GetHistoryData(sc,"")
 
 
 
 
   }
 
-  def GetHistoryData (sc:SparkContext,date: String)={
+  def GetHistoryData (sc:SparkContext,date1: String)={
 
-    /*for (i<-2 to 4) {
+    for (i<-2 to 31) {
       val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -i)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
-*/
       val ltvpath = "s3n://emojikeyboardlite/ltv/" + date + "/*"
 
       val eventpath = "s3n://emojikeyboardlite/event/" + date + "/*"
@@ -118,7 +117,7 @@ object getdata {
         }
         .repartition(1)
         .saveAsTextFile(savepath)
-    //}
+    }
 
 
 
@@ -264,10 +263,10 @@ object getdata {
               None
           }
       }
-      .filter{case (duid,appname,usertext)=>
+      /*.filter{case (duid,appname,usertext)=>
 
         appset.contains(appname)
-      }
+      }*/
       .map(x=> (x._1,x._3))
       .reduceByKey(_ + " " + _)
       .map { case (id, text) =>

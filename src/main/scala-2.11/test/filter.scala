@@ -108,7 +108,7 @@ object filter {
          }
 
        }
-        .repartition(1000)
+        .repartition(600)
 
 
 
@@ -145,15 +145,20 @@ object filter {
           }
           //val ll = adidlist.toArray.length
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=>x._1)
-            .mkString(",")
+
 
            (id+"_lite_themerec_facebook_ad",newlist)
         }
         .filter{case (id,newlist)=>
                 newlist.nonEmpty
         }
-        .repartition(1)
-        .saveAsTextFile(savepath)
+
+        //.repartition(1)
+        //.saveAsTextFile(savepath)
+      val data2redis=mydata.collect()
+
+
+      save2redis(data2redis)
 
 
   }
@@ -211,8 +216,8 @@ object filter {
       p.setex(item._1, REDISTTL,adidlist)
 
 
-      println("lxw-log id " + item._1)
-      println("gyy-log adid " + adidlist)
+      /*println("lxw-log id " + item._1)
+      println("gyy-log adid " + adidlist)*/
 
     }
     p.sync();//这段代码获取所有的response
