@@ -108,7 +108,7 @@ object filter {
          }
 
        }
-        .repartition(600)
+        .repartition(1600)
 
 
 
@@ -230,7 +230,7 @@ object filter {
     val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -1)
 
-    for (i<- 2 to 28) {
+    for (i<- 1 to 29) {
       //val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -1)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
