@@ -48,7 +48,7 @@ object filter {
     val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test2"
+    val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
 
 
@@ -97,7 +97,7 @@ object filter {
     val broadtitle = sc.broadcast(title)
 
     println("lxw "+makepath())
-    val mydata = sc.textFile(makepath())
+    val mydata = sc.textFile(hdfspath)
        .flatMap {case line =>
 
          val linearray = line.split("\t")
@@ -143,39 +143,15 @@ object filter {
             }
 
           }
-          val ll = adidlist.toArray.length
-           //val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
+          //val ll = adidlist.toArray.length
+           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=>x._1)
 
-           (id,countryCode,adidlist,ll)
+           (id+"_lite_themerec_facebook_ad",adidlist)
         }
-        .filter{case (id,countryCode,adidlist,ll)=>
+        .filter{case (id,adidlist)=>
                 adidlist.nonEmpty
-
         }
-
-    mydata.map{case (id,countryCode,adidlist,ll)=>
-
-      (ll,1)
-    }
-      .reduceByKey(_+_)
       .saveAsTextFile(savepath)
-
-
-    mydata.flatMap{case(id,countryCode,adidlist,ll)=>
-
-      adidlist.toArray.map{x=>
-        (x._2,1)
-      }
-    }
-      .reduceByKey(_+_)
-      .collect()
-      .sortWith(_._2>_._2)
-      .foreach(x=>
-
-        println("lxw logg "+ x)
-      )
-
-
 
 
   }
