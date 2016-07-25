@@ -159,6 +159,8 @@ object filter {
     }
       .reduceByKey(_+_)
       .saveAsTextFile(savepath)
+
+
     mydata.flatMap{case(id,countryCode,adidlist,ll)=>
 
       adidlist.toArray.map{x=>

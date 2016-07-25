@@ -29,38 +29,23 @@ object newData {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val path = "s3n://emojikeyboardlite/word/20160720/language=en_*/*"
+    val path = "hdfs:///lxw/test1"
     //val path  = "hdfs:///lxw/word0/*"
     val savepath  = "hdfs:///lxw/test2"
 
     HDFS.removeFile(savepath)
 
-    val appset = Array("com.android.chrome","com.google.android.youtube","com.android.browser","com.supercell.clashofclans" ,
-      "com.sec.android.app.sbrowser","com.google.android.googlequicksearchbox","com.android.vending",
-    "com.ea.gp.nbamobile","com.UCMobile.intl","com.google.android.apps.maps","com.ebay.mobile","com.uc.browser.en",
-    "com.lenovo.ideafriend","com.sec.android.app.clockpackage","com.ea.game.maddenmobile15_row")
-      .toSet
+
 
     val data = sc.textFile(path)
-      .map {case line =>
+        .map {case line =>
 
-        val linearray = line.split("\t")
-        val appname  = linearray(0)
-        val usertext = linearray (1)
-        val duid  = linearray(2)
-        (duid,appname,usertext)
-      }
-      .filter{case (duid,appname,usertext)=>
-
-          appset.contains(appname)
-      }
-      .map(x=> (x._1,x._3))
-      .reduceByKey(_ + " " + _)
-      .map { case (id, text) =>
-
-        val newtext = text.replaceAll("\\pP|\\pS", " ").replaceAll(" +", " ")
-        (id, newtext.toLowerCase)
-      }
+            line.replaceAll("\\(|\\)","")
+            val linearray = line.split(",")
+            val k = linearray(linearray.length-1)
+          (k,1)
+        }
+      .reduceByKey(_+_)
       .saveAsTextFile(savepath)
 
 
