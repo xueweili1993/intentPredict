@@ -45,7 +45,7 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///lxw/fuzzymatch/20160720/*"
+    val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
@@ -120,7 +120,13 @@ object filter {
           title.map{case (pattern,iter)=>
 
             val country2adid = iter.toMap
-            val sign = StringCompare.fuzzymatch(textwords,pattern,pattern.length/4)
+            val falsebit ={
+              if (pattern.length<10)
+                1
+              else
+                2
+            }
+            val sign = StringCompare.fuzzymatch(textwords,pattern,falsebit)
 
 
             if (sign){
@@ -220,15 +226,19 @@ object filter {
 
     val allpath = new ArrayBuffer[String]()
 
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -1)
+
     for (i<- 2 to 28) {
-      val caltoday = Calendar.getInstance()
-      caltoday.add(Calendar.DATE, -i)
+      //val caltoday = Calendar.getInstance()
+      caltoday.add(Calendar.DATE, -1)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
       val tempath= "hdfs:///lxw/fuzzymatch/"+date+"/*"
 
       if (! HDFS.existFile(tempath)) {
         allpath += tempath
       }
+
 
     }
     allpath.toArray.mkString(",")
