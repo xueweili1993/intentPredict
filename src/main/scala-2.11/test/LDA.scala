@@ -28,7 +28,7 @@ object myLDA {
     val awsSecretAccessKey = args(1)
 
 
-    //modified by Gao Yuan. 2016-07-11. The ad log data has been backed up in hdfs first.
+
     val savepath = "hdfs:///lxw/test1"
     val hdfspath = "hdfs:///lxw/awsdata/*"
     HDFS.removeFile(savepath)

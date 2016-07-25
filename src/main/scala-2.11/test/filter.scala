@@ -97,7 +97,7 @@ object filter {
     val broadtitle = sc.broadcast(title)
 
     println("lxw "+makepath())
-    val mydata = sc.textFile(hdfspath)
+    val mydata = sc.textFile(makepath())
        .flatMap {case line =>
 
          val linearray = line.split("\t")
@@ -143,11 +143,12 @@ object filter {
             }
 
           }
+          val ll = adidlist.toArray.length
            val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
 
-           (id,countryCode,textwords,newlist)
+           (id,countryCode,newlist,ll)
         }
-        .filter{case (id,countryCode,textwords,adidlist)=>
+        .filter{case (id,countryCode,adidlist,ll)=>
                 adidlist.nonEmpty
 
         }
