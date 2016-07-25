@@ -246,13 +246,19 @@ object getdata {
       .toSet
 
     val data = sc.textFile(path)
-      .map {case line =>
+      .flatMap {case line =>
 
-        val linearray = line.split("\t")
-        val appname  = linearray(0)
-        val usertext = linearray (1)
-        val duid  = linearray(2)
-        (duid,appname,usertext)
+        try {
+          val linearray = line.split("\t")
+          val appname = linearray(0)
+          val usertext = linearray(1)
+          val duid = linearray(2)
+          Some ((duid, appname, usertext))
+        }
+          catch {
+            case _:  Throwable =>
+              None
+          }
       }
       .filter{case (duid,appname,usertext)=>
 
