@@ -30,13 +30,13 @@ object Dailyupdate {
         val linearray = line.split("\t")
           linearray.map{x =>
 
-            val pair  = x.replaceAll("\\(|\\)","").split(",")
+            val pair  = x.replaceAll("\\(|\\)","")
 
 
-              val adid = pair(0)
+             /* val adid = pair(0)
               val title = pair(1)
-
-            (adid, title)
+*/
+            (pair)
 
           }
 
