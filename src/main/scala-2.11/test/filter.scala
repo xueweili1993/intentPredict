@@ -108,7 +108,7 @@ object filter {
          }
 
        }
-        .repartition(100)
+        .repartition(1000)
 
 
 
