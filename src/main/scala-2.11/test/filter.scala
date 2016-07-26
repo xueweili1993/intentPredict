@@ -236,14 +236,15 @@ object filter {
     val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -1)
 
-    for (i<- 2 to 29) {
+    for (i<- 1 to 29) {
       //val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -1)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
-      val tempath= "hdfs:///lxw/fuzzymatch/"+date+"/*"
+      val tempath= "hdfs:///lxw/fuzzymatch/"+date
 
-      if (! HDFS.existFile(tempath)) {
-        allpath += tempath
+      if (HDFS.existFile(tempath)) {
+        val tempath1 = tempath+"/*"
+        allpath += tempath1
       }
 
 
