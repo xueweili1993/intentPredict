@@ -40,7 +40,7 @@ object Dailyupdate {
             val adid = pair(0)
             val title = pair(1)
 
-            (adid, title, )
+            (adid, title)
           }
 
       }
