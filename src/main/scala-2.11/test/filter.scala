@@ -146,7 +146,7 @@ object filter {
 
           if (newlist.nonEmpty){
 
-            Some(id + "_lite_trends_picks_apps"+"\t"+newlist)
+            Some(id + "_lite_trends_picks_apps"+"\t"+countryCode+"\t"+newlist)
           }
           else{
             None
