@@ -91,7 +91,7 @@ object myLDA {
       .collect()
       .zipWithIndex
       .toMap
-     // .foreach()
+      .foreach(x=> println("lxw log "+ x))
 
 
   }
