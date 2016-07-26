@@ -91,7 +91,7 @@ object myLDA {
       .collect()
       .zipWithIndex
       .toMap
-      .foreach()
+     // .foreach()
 
 
   }
