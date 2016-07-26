@@ -113,27 +113,31 @@ object filter {
 
 
 
-      .map{case (id, countryCode,textwords)=>
+      .mapPartitions { case rows =>
 
-          val titles = broadtitle.value
-          val adidlist  = new ArrayBuffer[(String,String)]()
+        val titles = broadtitle.value
 
-          title.map{case (pattern,iter)=>
+        rows.flatMap { case (id, countryCode, textwords) =>
+
+         // val titles = broadtitle.value
+          val adidlist = new ArrayBuffer[(String, String)]()
+
+          title.map { case (pattern, iter) =>
 
             val country2adid = iter.toMap
-            val falsebit ={
-              if (pattern.length<10)
+            val falsebit = {
+              if (pattern.length < 10)
                 1
               else
                 2
             }
-            val sign = StringCompare.fuzzymatch(textwords,pattern,falsebit)
+            val sign = StringCompare.fuzzymatch(textwords, pattern, falsebit)
 
 
-            if (sign){
-              if (country2adid.contains(countryCode)){
+            if (sign) {
+              if (country2adid.contains(countryCode)) {
 
-                val adid  = country2adid.get(countryCode) match{
+                val adid = country2adid.get(countryCode) match {
                   case Some(x) => x
                   case None => ""
                 }
@@ -145,14 +149,20 @@ object filter {
 
           }
           //val ll = adidlist.toArray.length
-           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
+          val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length).mkString(",")
 
 
-           (id+"_lite_themerec_facebook_ad",newlist)
+          if (newlist.nonEmpty){
+          Some((id + "_lite_themerec_facebook_ad", newlist))
+          }
+            else{
+            None
+          }
         }
-        .filter{case (id,newlist)=>
-                newlist.nonEmpty
-        }
+          /*.filter { case (id, newlist) =>
+            newlist.nonEmpty
+          }*/
+      }
 
         .repartition(20)
         .saveAsTextFile(savepath)
