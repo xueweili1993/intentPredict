@@ -109,7 +109,7 @@ object filter {
          }
 
        }
-        .repartition(2000)
+        //.repartition(2000)
 
 
 
