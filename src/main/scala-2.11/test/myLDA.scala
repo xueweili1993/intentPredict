@@ -5,7 +5,9 @@ import java.util.Calendar
 
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.mllib.clustering.{LDA, DistributedLDAModel}
+import org.apache.spark.mllib.clustering.{DistributedLDAModel, LDA}
+
+import scala.collection.mutable.ArrayBuffer
 
 
 /**
@@ -90,8 +92,50 @@ object myLDA {
       .distinct()
       .collect()
       .zipWithIndex
+    val length = wordTable.length
+    val wordTable1 = wordTable
       .toMap
-      .foreach(x=> println("lxw log "+ x))
+      //.foreach(x=> println("lxw log "+ x))
+
+    val broadwordTable = sc.broadcast(wordTable1)
+
+    val userTable  = IdWithWord.map{case (id, word)=>
+
+      ((id, word),1)
+    }
+      .reduceByKey(_+_)
+      .map{case ((id,word),num)=>
+
+        (id,(word,num))
+      }
+      .groupByKey()
+      .map{case (id, iter)=>
+
+        val words_table  = broadwordTable.value
+        val indexA = new ArrayBuffer[Int]()
+        val freA  = new ArrayBuffer[Double]()
+
+         iter.foreach(x=>
+           if (words_table.contains(x._1)){
+
+             val freq = x._2
+             val index = words_table.get(x._1) match{
+
+               case Some(x) => x
+               case None => 0
+
+             }
+
+             indexA.append(index)
+             freA.append(freq)
+           }
+
+         )
+
+          val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
+
+          Vec
+      }
 
 
   }

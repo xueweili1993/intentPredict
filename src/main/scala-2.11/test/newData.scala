@@ -31,7 +31,7 @@ object newData {
 
     val path = "hdfs:///lxw/test1"
     //val path  = "hdfs:///lxw/word0/*"
-    val savepath  = "hdfs:///lxw/test2"
+    val savepath  = "hdfs:///lxw/test3"
 
     HDFS.removeFile(savepath)
 
@@ -40,9 +40,9 @@ object newData {
     val data = sc.textFile(path)
         .map {case line =>
 
-            line.replaceAll("\\(|\\)","")
+
             val linearray = line.split(",")
-            val k = linearray(linearray.length-1)
+            val k = linearray.length-1
           (k,1)
         }
       .reduceByKey(_+_)
