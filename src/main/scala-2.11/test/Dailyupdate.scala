@@ -27,17 +27,15 @@ object Dailyupdate {
       .flatMap{case line=>
 
         val newstring = line.substring(78, line.length)
-        val linearray = line.split("\t")
-          linearray.map{x =>
+        val linearray = newstring.split("\t")
 
-            val pair  = x.replaceAll("\\(|\\)","")
+          linearray.map{x=>
 
+            val pair = x.replaceAll("\\(|\\)","").split(",")
+            val adid = pair(0)
+            val title = pair(1)
 
-             /* val adid = pair(0)
-              val title = pair(1)
-*/
-            (pair)
-
+            (adid, title)
           }
 
       }
