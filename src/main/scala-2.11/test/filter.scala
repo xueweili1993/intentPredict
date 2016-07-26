@@ -111,7 +111,6 @@ object filter {
        }
         .repartition(600)
 
-
         .flatMap { case (id, countryCode, textwords) =>
 
           val titles = broadtitle.value
