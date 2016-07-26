@@ -153,7 +153,7 @@ object filter {
 
 
           if (newlist.nonEmpty){
-          Some((id + "_lite_themerec_facebook_ad", newlist))
+          Some((id + "_lite_trends_picks_apps", newlist))
           }
             else{
             None
