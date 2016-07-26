@@ -142,16 +142,16 @@ object filter {
 
             }
 
+          }
           val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length).mkString("\t")
 
-            if (newlist.nonEmpty){
+          if (newlist.nonEmpty){
 
-          Some(id + "_lite_trends_picks_apps"+"\t"+newlist)
+            Some(id + "_lite_trends_picks_apps"+"\t"+newlist)
           }
-            else{
+          else{
             None
           }
-        }
 
       }
 
