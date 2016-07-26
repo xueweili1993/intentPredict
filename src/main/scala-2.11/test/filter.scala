@@ -45,10 +45,10 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
-    //val stopwords  = "hdfs:///lxw/stopwords"
+    val hdfspath = "hdfs:///lxw/fuzzymatch/20160720/*"
 
-    val savepath = "hdfs:///lxw/test1"
+
+    val savepath = "hdfs:///lxw/awsdata"
 
     HDFS.removeFile(savepath)
 
@@ -109,17 +109,12 @@ object filter {
          }
 
        }
-        .repartition(2000)
+        .repartition(600)
 
 
+        .flatMap { case (id, countryCode, textwords) =>
 
-     // .mapPartitions { case rows =>
-
-       // val titles = broadtitle.value
-
-        .map { case (id, countryCode, textwords) =>
-
-         val titles = broadtitle.value
+          val titles = broadtitle.value
           val adidlist = new ArrayBuffer[(String, String)]()
 
           title.map { case (pattern, iter) =>
@@ -145,26 +140,22 @@ object filter {
                 adidlist += ((adid, pattern))
               }
 
-            //}
+            }
 
-          }
-          //val ll = adidlist.toArray.length
-          val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length).mkString(",")
+          val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length).mkString("\t")
 
+            if (newlist.nonEmpty){
 
-          if (newlist.nonEmpty){
-          Some((id + "_lite_trends_picks_apps", newlist))
+          Some(id + "_lite_trends_picks_apps"+"\t"+newlist)
           }
             else{
             None
           }
         }
-          /*.filter { case (id, newlist) =>
-            newlist.nonEmpty
-          }*/
+
       }
 
-        .repartition(20)
+        .repartition(1)
         .saveAsTextFile(savepath)
      // val data2redis=mydata.collect()
 
