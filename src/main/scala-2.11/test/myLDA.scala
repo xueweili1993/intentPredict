@@ -136,6 +136,7 @@ object myLDA {
 
           Vec
       }
+      .saveAsTextFile(savepath)
 
 
   }
