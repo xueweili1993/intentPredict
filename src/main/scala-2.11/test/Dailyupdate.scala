@@ -31,7 +31,10 @@ object Dailyupdate {
     val Recommodation = sc.textFile(path)
       .flatMap{case line=>
 
-        val newstring = line.substring(78, line.length)
+        val id = line.substring(1,77)
+        val country = line.substring(78,80)
+
+        val newstring = line.substring(81, line.length)
         val linearray = newstring.split("\t")
 
           linearray.map{x=>
@@ -40,7 +43,7 @@ object Dailyupdate {
             val adid = pair(0)
             val title = pair(1)
 
-            (adid, title)
+            (id, country, adid, title)
           }
 
       }
