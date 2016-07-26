@@ -141,6 +141,16 @@ object myLDA {
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
     val idWithIndex = raw.map(x=>(x._2,x._1._1))
 
+    val ldaModel = new LDA().setK(3).run(corpus)
+
+    println("Learned topics (as distributions over vocab of " + ldaModel.vocabSize + " words):")
+    val topics = ldaModel.topicsMatrix
+    for (topic <- Range(0, 3)) {
+      print("Topic " + topic + ":")
+      for (word <- Range(0, ldaModel.vocabSize)) { print(" " + topics(word, topic)); }
+      println()
+    }
+
 
 
   }
