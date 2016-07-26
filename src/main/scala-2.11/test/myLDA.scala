@@ -92,6 +92,7 @@ object myLDA {
       .distinct()
       .collect()
       .zipWithIndex
+
     val length = wordTable.length
     val wordTable1 = wordTable
       .toMap
@@ -134,9 +135,12 @@ object myLDA {
 
           val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
 
-          Vec
+        (id,Vec)
       }
-      .saveAsTextFile(savepath)
+    val raw = userTable.zipWithIndex
+    val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
+    val idWithIndex = raw.map(x=>(x._2,x._1._1))
+
 
 
   }

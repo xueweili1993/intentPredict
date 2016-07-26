@@ -109,17 +109,17 @@ object filter {
          }
 
        }
-        //.repartition(2000)
+        .repartition(2000)
 
 
 
-      .mapPartitions { case rows =>
+     // .mapPartitions { case rows =>
 
-        val titles = broadtitle.value
+       // val titles = broadtitle.value
 
-        rows.flatMap { case (id, countryCode, textwords) =>
+        .map { case (id, countryCode, textwords) =>
 
-         // val titles = broadtitle.value
+         val titles = broadtitle.value
           val adidlist = new ArrayBuffer[(String, String)]()
 
           title.map { case (pattern, iter) =>
@@ -145,7 +145,7 @@ object filter {
                 adidlist += ((adid, pattern))
               }
 
-            }
+            //}
 
           }
           //val ll = adidlist.toArray.length
