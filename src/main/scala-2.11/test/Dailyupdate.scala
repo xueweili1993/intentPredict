@@ -47,8 +47,8 @@ object Dailyupdate {
           }
 
       }
-      .distinct()
-     // .saveAsTextFile(savepath)
+      //.distinct()
+      .saveAsTextFile(savepath)
 
 
 
