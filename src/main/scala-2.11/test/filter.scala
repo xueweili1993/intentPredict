@@ -98,7 +98,7 @@ object filter {
     val broadtitle = sc.broadcast(title)
 
     println("lxw "+makepath())
-    val mydata = sc.textFile(hdfspath)
+    val mydata = sc.textFile(makepath())
        .flatMap {case line =>
 
          val linearray = line.split("\t")
@@ -109,7 +109,7 @@ object filter {
          }
 
        }
-        .repartition(1000)
+        .repartition(2000)
 
 
 
@@ -154,7 +154,7 @@ object filter {
                 newlist.nonEmpty
         }
 
-        .repartition(1)
+        .repartition(20)
         .saveAsTextFile(savepath)
      // val data2redis=mydata.collect()
 
