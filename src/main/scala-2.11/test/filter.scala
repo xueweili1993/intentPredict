@@ -48,7 +48,8 @@ object filter {
     val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test2"
+    val savepath = "hdfs:///lxw/test1"
+
     HDFS.removeFile(savepath)
 
 
