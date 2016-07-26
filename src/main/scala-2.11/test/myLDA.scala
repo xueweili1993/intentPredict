@@ -40,7 +40,7 @@ object myLDA {
 
     val bStop = sc.broadcast(stopwords)
 
-    val adlog = sc.textFile(hdfspath)
+    val IdWithWord = sc.textFile(hdfspath)
       .flatMap{case line=>
 
           val linearray = line.split("\t")
@@ -80,10 +80,18 @@ object myLDA {
       }
       .filter(x=>
 
-        x._2!=""
+        x._2.length>3
       )
-      .saveAsTextFile(savepath)
+        .cache()
 
+
+    val wordTable  = IdWithWord.map(x=>
+    x._2)
+      .distinct()
+      .collect()
+      .zipWithIndex
+      .toMap
+      .foreach()
 
 
   }

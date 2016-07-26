@@ -48,7 +48,7 @@ object filter {
     val hdfspath = "hdfs:///lxw/fuzzymatch/20160722/*"
     //val stopwords  = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test1"
+    val savepath = "hdfs:///lxw/test2"
     HDFS.removeFile(savepath)
 
 
@@ -108,7 +108,7 @@ object filter {
          }
 
        }
-        .repartition(600)
+        .repartition(100)
 
 
 
@@ -144,7 +144,7 @@ object filter {
 
           }
           //val ll = adidlist.toArray.length
-           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).map(x=>x._1)
+           val newlist =adidlist.toArray.sortWith(_._2.length>_._2.length).mkString(",")
 
 
            (id+"_lite_themerec_facebook_ad",newlist)
@@ -153,12 +153,12 @@ object filter {
                 newlist.nonEmpty
         }
 
-        //.repartition(1)
-        //.saveAsTextFile(savepath)
-      val data2redis=mydata.collect()
+        .repartition(1)
+        .saveAsTextFile(savepath)
+     // val data2redis=mydata.collect()
 
 
-      save2redis(data2redis)
+     // save2redis(data2redis)
 
 
   }
