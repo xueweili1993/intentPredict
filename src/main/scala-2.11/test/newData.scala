@@ -41,8 +41,8 @@ object newData {
         .map {case line =>
 
 
-            val linearray = line.split(",")
-            val k = linearray.length-1
+            val linearray = line.split("),(")
+            val k = linearray.length+1
           (k,1)
         }
       .reduceByKey(_+_)
