@@ -71,15 +71,17 @@ object myLDA {
 
             if (stop.contains(x1))
               {
-                None
+                ("","")
               }
             else{
-              Some((linearray(0),x1))
+              (linearray(0),x1)
             }
-
-
           }
       }
+      .filter(x=>
+
+        x._2!=""
+      )
       .saveAsTextFile(savepath)
 
 
