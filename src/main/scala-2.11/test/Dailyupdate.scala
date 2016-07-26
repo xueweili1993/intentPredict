@@ -41,6 +41,7 @@ object Dailyupdate {
           }
 
       }
+      .saveAsTextFile(savepath)
 
 
 
