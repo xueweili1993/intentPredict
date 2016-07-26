@@ -32,9 +32,9 @@ object Dailyupdate {
       .flatMap{case line=>
 
         val id = line.substring(1,76)
-        val country = line.substring(77,81)
+        val country = line.substring(77,79)
 
-        val newstring = line.substring(82, line.length)
+        val newstring = line.substring(80, line.length)
         val linearray = newstring.split("\t")
 
           linearray.map{x=>
