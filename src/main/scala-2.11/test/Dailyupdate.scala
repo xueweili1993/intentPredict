@@ -85,10 +85,10 @@ object Dailyupdate {
           (adid, (country, id, title))
         }
       }
-      .saveAsTextFile(savepath)
-      //.cache()
+      //.saveAsTextFile(savepath)
+      .cache()
 
-   /* val oldAdidList = Recommodation
+    /*val oldAdidList = Recommodation
       .map{case (adid, (country, id, title))=>
 
         ((id,country), (adid,title))
@@ -97,7 +97,7 @@ object Dailyupdate {
       .map{case ((id,country), iter)=>
 
         (id, (country,iter.toArray))
-      }
+      }*/
 
 
     val idset = Recommodation
@@ -116,8 +116,9 @@ object Dailyupdate {
     //============search from sql database=================
 
     val updatelist = findadpack(sc, ids)
+      .saveAsTextFile(savepath)
 
-      .join(Recommodation)
+      /*.join(Recommodation)
       .map { case (adid, (_, (country, id, delete_title))) =>
 
         ((delete_title, country), id)
