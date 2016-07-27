@@ -116,7 +116,7 @@ object filter {
           val titles = broadtitle.value
           val adidlist = new ArrayBuffer[(String, String)]()
 
-          title.map { case (pattern, iter) =>
+          titles.map { case (pattern, iter) =>
 
             val country2adid = iter.toMap
             val falsebit = {
