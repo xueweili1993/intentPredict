@@ -110,7 +110,7 @@ object Dailyupdate {
       .mkString(",")
 
     val ids = "(" + idset + ")"
-
+    println("lxw log"+ ids)
 
 
     //============search from sql database=================
