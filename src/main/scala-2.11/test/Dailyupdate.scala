@@ -67,7 +67,7 @@ object Dailyupdate {
     //============get the deleted title ======================
 
     val Recommodation = sc.textFile(path)
-      .flatMap { case line =>
+     /* .flatMap { case line =>
 
         val Rawarray = line.split("\t")
 
@@ -75,7 +75,6 @@ object Dailyupdate {
         val country = Rawarray(1)
 
 
-        val linearray = R
 
         linearray.map { x =>
 
@@ -85,8 +84,7 @@ object Dailyupdate {
 
           (adid, (country, id, title))
         }
-
-      }
+      }*/
       .cache()
 
     val oldAdidList = Recommodation
