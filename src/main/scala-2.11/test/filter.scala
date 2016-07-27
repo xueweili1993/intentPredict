@@ -60,8 +60,8 @@ object filter {
     val savepath = "hdfs:///lxw/fuzzymatchUpdate/"+date
     HDFS.removeFile(savepath)
 
-   /* getdata.GetHistoryData(sc,date)
-    Fuzzymatch(sc,hdfspath,savepath)*/
+    getdata.GetHistoryData(sc,date)
+    Fuzzymatch(sc,hdfspath,savepath)
 
     val path  = "hdfs:///lxw/awsdata"
     HDFS.removeFile(path)
