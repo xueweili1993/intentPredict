@@ -85,9 +85,10 @@ object Dailyupdate {
           (adid, (country, id, title))
         }
       }
-      .cache()
+      .saveAsTextFile(savepath)
+      //.cache()
 
-    val oldAdidList = Recommodation
+   /* val oldAdidList = Recommodation
       .map{case (adid, (country, id, title))=>
 
         ((id,country), (adid,title))
@@ -171,8 +172,8 @@ object Dailyupdate {
 
               (x,newlist)
             }
-        }
-      .saveAsTextFile(savepath)
+        }*/
+
 
    /* val finallist = updatelist
       .join (oldAdidList)
