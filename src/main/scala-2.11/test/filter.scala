@@ -98,7 +98,7 @@ object filter {
     val broadtitle = sc.broadcast(title)
 
     println("lxw "+makepath())
-    val mydata = sc.textFile(hdfspath)
+    val mydata = sc.textFile(makepath())
        .flatMap {case line =>
 
          val linearray = line.split("\t")
