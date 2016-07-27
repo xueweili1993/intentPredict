@@ -43,7 +43,7 @@ object Dailyupdate {
             val adid = pair(0)
             val title = pair(1)
 
-            (id, country, adid, title)
+            (adid, (country, id, title))
           }
 
       }
@@ -52,7 +52,7 @@ object Dailyupdate {
       //.saveAsTextFile(savepath)
 
     val idset =Recommodation
-      .map{case (id, country, adid, title)=>
+      .map{case (adid, (country, id, title))=>
 
           adid
       }
@@ -63,7 +63,16 @@ object Dailyupdate {
     val ids = "("+idset+")"
 
     findadpack(sc, ids)
+      .join(Recommodation)
+      .map{case (adid,(_,(country,id,title)))=>
+
+        (adid, country, title)
+
+      }
       .saveAsTextFile(savepath)
+
+
+
 
 
 
@@ -83,11 +92,11 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id, title from ad where id in "+myset+ "and is_deleted = 1"
+    val sqlcmd = "select id from ad where id in "+myset+ "and is_deleted = 1"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
-        (x(0).toString,x(1).toString)
+        (x(0).toString,"")
       }
 
     jdbc
