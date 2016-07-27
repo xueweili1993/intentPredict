@@ -69,11 +69,13 @@ object Dailyupdate {
     val Recommodation = sc.textFile(path)
       .flatMap { case line =>
 
-        val id = line.substring(1, 76)
-        val country = line.substring(77, 79)
+        val Rawarray = line.split("\t")
 
-        val newstring = line.substring(80, line.length)
-        val linearray = newstring.split("\t")
+        val id = Rawarray(0)
+        val country = Rawarray(1)
+
+
+        val linearray = R
 
         linearray.map { x =>
 
@@ -86,6 +88,11 @@ object Dailyupdate {
 
       }
       .cache()
+
+    val oldAdidList = Recommodation
+      .map{case (adid, (country, id, title))=>
+
+      }
 
 
     val idset = Recommodation
