@@ -66,10 +66,11 @@ object Dailyupdate {
       .join(Recommodation)
       .map{case (adid,(_,(country,id,title)))=>
 
-        (adid, country, title)
+        ((title, country), id)
 
       }
-      .saveAsTextFile(savepath)
+        .groupByKey()
+        .saveAsTextFile(savepath)
 
 
 
