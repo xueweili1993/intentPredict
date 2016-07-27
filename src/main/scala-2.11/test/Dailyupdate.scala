@@ -83,7 +83,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id, title, from ad where is_deleted = 1 and id in "+myset
+    val sqlcmd = "select id, title, from ad where is_deleted = 0 and id in "+myset
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
