@@ -119,9 +119,9 @@ object Dailyupdate {
             val country2adid = iter.toMap
             val falsebit = {
             if (pattern.length < 10)
-              1
-             else
               2
+             else
+              4
         }
         val sign = StringCompare.fuzzymatch(delete_title, pattern, falsebit)
 
