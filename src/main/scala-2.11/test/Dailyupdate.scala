@@ -172,14 +172,14 @@ object Dailyupdate {
               (x,newlist)
             }
         }
+      .saveAsTextFile(savepath)
 
-
-    val finallist = updatelist
+   /* val finallist = updatelist
       .join (oldAdidList)
       .map{case (id,(newlist,(country,oldlist)))=>
 
         id+"\t"+country+"\t"+(newlist++oldlist).mkString("::")
-      }
+      }*/
 
 
 
