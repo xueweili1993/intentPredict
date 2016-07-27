@@ -145,6 +145,10 @@ object Dailyupdate {
       (iditer, newlist)
 
       }
+        .filter{case (iditer, newlist)=>
+
+            newlist.nonEmpty
+        }
         .flatMap{case (iditer, newlist)=>
 
 
