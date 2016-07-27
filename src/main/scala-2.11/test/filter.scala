@@ -29,6 +29,9 @@ object filter {
 
     val sc = new SparkContext(conf)
 
+    val mmdbPath = "/home/gaoyuan/userLabel/resource/GeoIP2-City.mmdb"
+    sc.addFile(mmdbPath)
+
 
 
     val hadoopConf = sc.hadoopConfiguration
@@ -54,7 +57,7 @@ object filter {
     caltoday.add(Calendar.DATE, -2)
     val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
     val hdfspath = "hdfs:///lxw/fuzzymatch/"+date+"/*"
-    val savepath = "hdfs:///lxw/fuzzymatchUpdate"+date+"/*"
+    val savepath = "hdfs:///lxw/fuzzymatchUpdate/"+date+"/*"
     HDFS.removeFile(savepath)
 
     getdata.GetHistoryData(sc,date)
@@ -223,7 +226,7 @@ object filter {
         }
 
       }
-      .repartition(2000)
+      .repartition(600)
 
       .flatMap { case (id, countryCode, textwords) =>
 
