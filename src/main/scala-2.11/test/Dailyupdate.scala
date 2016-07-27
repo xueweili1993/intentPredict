@@ -119,7 +119,7 @@ object Dailyupdate {
             val country2adid = iter.toMap
             val falsebit = {
             if (pattern.length < 10)
-              3
+              2
              else
               4
         }
@@ -140,10 +140,20 @@ object Dailyupdate {
         }
 
       }
+      val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length)
 
-      (delete_title, adidlist.toArray.mkString(","))
+      (iditer, newlist)
 
-    }
+      }
+        .flatMap{case (iditer, newlist)=>
+
+
+            iditer.map{x=>
+
+              (x,newlist.mkString(","))
+            }
+        }
+
       .saveAsTextFile(savepath)
 
 
