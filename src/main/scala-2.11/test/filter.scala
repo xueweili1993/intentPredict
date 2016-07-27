@@ -109,7 +109,7 @@ object filter {
          }
 
        }
-        .repartition(600)
+        .repartition(2000)
 
         .flatMap { case (id, countryCode, textwords) =>
 
