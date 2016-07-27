@@ -201,7 +201,7 @@ object Dailyupdate {
         finallist
         .map{ case (id, country, list)=>
 
-
+          (id+"\t"+country+"\t"+list.mkString("::"))
 
          }
         .saveAsTextFile(savepath)
@@ -235,7 +235,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 1"
+    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 0"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map { x =>
