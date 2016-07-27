@@ -185,12 +185,13 @@ object Dailyupdate {
         val newList = newlist match{
 
           case Some(x)=> x
+          case None => new ArrayBuffer[(String, String)].toArray
         }
 
         val oldList = oldlist match {
 
           case Some(x)=> x
-
+          case None => ("",new ArrayBuffer[(String, String)].toArray)
         }
 
         val country = oldList._1
