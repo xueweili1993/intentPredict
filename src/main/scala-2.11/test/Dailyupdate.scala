@@ -98,7 +98,8 @@ object Dailyupdate {
       .groupByKey()
       .map{case ((id,country), iter)=>
 
-        (id, country+"\t"+iter.toArray.mkString("::"))
+        //(id, country+"\t"+iter.toArray.mkString("::"))
+        (id, (country,iter.toArray))
       }
 
 
@@ -172,7 +173,7 @@ object Dailyupdate {
 
             iditer.map{x=>
 
-              (x,newlist.mkString("::"))
+              (x,newlist)
             }
         }
 
@@ -183,27 +184,40 @@ object Dailyupdate {
 
         val newList = newlist match{
 
-          case Some(x )=> x
-          case None => ""
+          case Some(x)=> x
         }
 
         val oldList = oldlist match {
 
           case Some(x)=> x
-          case None => ""
+
         }
 
-        val country = oldList.split("\t")(0)
+        val country = oldList._1
 
-        if (newList!= "") {
-
-          id + "\t" + country + "\t" + newList + "::" + oldList.split("\t")(1)
-        }
-        else{
-          id + "\t" + country + "\t" + oldList.split("\t")(1)
-        }
+        (id, country, (newList++oldList._2))
       }
-      .saveAsTextFile(savepath)
+
+        finallist
+        .map{ case (id, country, list)=>
+
+
+
+         }
+        .saveAsTextFile(savepath)
+
+    /*val saveredis = finallist.map{case line =>
+
+        val linearray = line.split("\t")
+        val id  = linearray(0)
+        val adidlist = linearray(2).split("::")
+          if
+          .map{x=>
+
+            val adid = x.replaceAll("\\(|\\)","").split(",")(0)
+            (id,adid)
+          }
+    }*/
 
 
 

@@ -45,17 +45,22 @@ object filter {
 
     hadoopConf.set("fs.s3n.awsSecretAccessKey", awsSecretAccessKey)
 
-    val hdfspath = "hdfs:///lxw/fuzzymatch/20160720/*"
 
 
-    val savepath = "hdfs:///lxw/awsdata"
 
+
+
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -2)
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+    val hdfspath = "hdfs:///lxw/fuzzymatch/"+date+"/*"
+    val savepath = "hdfs:///lxw/fuzzymatchUpdate"+date+"/*"
     HDFS.removeFile(savepath)
 
+    getdata.GetHistoryData(sc,date)
+    Fuzzymatch(sc,hdfspath,savepath)
 
-
-
-    val title = TitleWithCountryAdid(sc)
+    /*val title = TitleWithCountryAdid(sc)
 
       .map{case (title, id, payout,country) =>
 
@@ -142,11 +147,11 @@ object filter {
             }
 
           }
-          val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length).mkString("::")
+          val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length)
 
-          if (newlist.nonEmpty){
+          if (newlist.length>2){
 
-            Some(id + "_lite_trends_picks_apps"+"\t"+countryCode+"\t"+newlist)
+            Some(id + "_lite_trends_picks_apps"+"\t"+countryCode+"\t"+newlist.mkString("::"))
           }
           else{
             None
@@ -155,18 +160,118 @@ object filter {
       }
 
         .repartition(1)
-        .saveAsTextFile(savepath)
-     // val data2redis=mydata.collect()
-
-
-     // save2redis(data2redis)
+        .saveAsTextFile(savepath)*/
 
 
   }
 
 
 
+  def Fuzzymatch (sc: SparkContext,hdfspath:String, savepath: String) =
+  {
+    val title = TitleWithCountryAdid(sc)
 
+      .map{case (title, id, payout,country) =>
+
+        val newtitle  =  title.replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
+        (newtitle, id, payout,country)
+      }
+      .map{case (newtitle, id, payout,country)=>
+        val linearray = newtitle.split(" ")
+        if (linearray.length>3)
+        {
+          var ll = ""
+          for (i<-0 to 2)
+          {
+            ll = ll+ " "+linearray(i)
+          }
+          ((ll.trim,country),(id,payout))
+        }
+        else {
+          ((newtitle.trim,country),(id,payout))
+        }
+      }
+      .filter{case ((newtitle,country),(id,payout)) =>
+
+        // val linearray = newtitle.split(" ")
+        newtitle.length<31 && newtitle.length>4
+      }
+      .groupByKey
+      .map{case (title, adlist)=>
+
+        val newsequence = adlist.toArray.sortWith(_._2>_._2)(0)
+        (title._1,(title._2,newsequence._1))//(title,country,adid)
+      }
+      .groupByKey
+      //.saveAsTextFile(savepath)
+      .collect
+      .toSet
+
+
+
+    val broadtitle = sc.broadcast(title)
+
+
+    val mydata = sc.textFile(hdfspath)
+      .flatMap {case line =>
+
+        val linearray = line.split("\t")
+        if (linearray.length>2) {
+          Some((linearray(0), linearray(1),linearray(2)))
+        }else{
+          None
+        }
+
+      }
+      .repartition(2000)
+
+      .flatMap { case (id, countryCode, textwords) =>
+
+        val titles = broadtitle.value
+        val adidlist = new ArrayBuffer[(String, String)]()
+
+        titles.map { case (pattern, iter) =>
+
+          val country2adid = iter.toMap
+          val falsebit = {
+            if (pattern.length < 10)
+              1
+            else
+              2
+          }
+          val sign = StringCompare.fuzzymatch(textwords, pattern, falsebit)
+
+
+          if (sign) {
+            if (country2adid.contains(countryCode)) {
+
+              val adid = country2adid.get(countryCode) match {
+                case Some(x) => x
+                case None => ""
+              }
+
+              adidlist += ((adid, pattern))
+            }
+
+          }
+
+        }
+        val newlist = adidlist.toArray.sortWith(_._2.length > _._2.length)
+
+        if (newlist.length>2){
+
+          Some(id + "_lite_trends_picks_apps"+"\t"+countryCode+"\t"+newlist.mkString("::"))
+        }
+        else{
+          None
+        }
+
+      }
+
+      .repartition(1)
+      .saveAsTextFile(savepath)
+
+  }
 
 
   def TitleWithCountryAdid(sc: SparkContext)={

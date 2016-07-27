@@ -64,17 +64,17 @@ object getdata {
 
   def GetHistoryData (sc:SparkContext,date1: String)={
 
-    for (i<-2 to 31) {
+    /*for (i<-2 to 2) {
       val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -i)
-      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
-      val ltvpath = "s3n://emojikeyboardlite/ltv/" + date + "/*"
+      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())*/
+      val ltvpath = "s3n://emojikeyboardlite/ltv/" + date1 + "/*"
 
-      val eventpath = "s3n://emojikeyboardlite/event/" + date + "/*"
+      val eventpath = "s3n://emojikeyboardlite/event/" + date1 + "/*"
 
-      val savepath = "hdfs:///lxw/fuzzymatch/" + date
+      val savepath = "hdfs:///lxw/fuzzymatch/" + date1
 
-      val keyboardpath = "s3n://emojikeyboardlite/word/"+date+"/language=en_*/*"
+      val keyboardpath = "s3n://emojikeyboardlite/word/"+date1+"/language=en_*/*"
 
       HDFS.removeFile(savepath)
 
@@ -117,7 +117,7 @@ object getdata {
         }
         .repartition(1)
         .saveAsTextFile(savepath)
-    }
+    //}
 
 
 
