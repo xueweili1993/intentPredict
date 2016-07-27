@@ -47,9 +47,23 @@ object Dailyupdate {
           }
 
       }
+      .cache()
       //.distinct()
-      .saveAsTextFile(savepath)
+      //.saveAsTextFile(savepath)
 
+    val idset =Recommodation
+      .map{case (id, country, adid, title)=>
+
+          adid
+      }
+      .distinct()
+      .collect()
+      .mkString(",")
+
+    val ids = "\\("+idset+"\\)"
+
+    findadpack(sc, ids)
+      .saveAsTextFile(savepath)
 
 
 
@@ -69,7 +83,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id, title, from ad where id in "+myset
+    val sqlcmd = "select id, title, from ad where is_deleted = 1 and id in "+myset
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map{x =>
