@@ -60,7 +60,7 @@ object Dailyupdate {
       .collect()
       .mkString(",")
 
-    val ids = "\\("+idset+"\\)"
+    val ids = "("+idset+")"
 
     findadpack(sc, ids)
       .saveAsTextFile(savepath)
