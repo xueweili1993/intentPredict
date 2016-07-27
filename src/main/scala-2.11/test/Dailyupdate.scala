@@ -88,7 +88,7 @@ object Dailyupdate {
       //.saveAsTextFile(savepath)
       .cache()
 
-    /*val oldAdidList = Recommodation
+    val oldAdidList = Recommodation
       .map{case (adid, (country, id, title))=>
 
         ((id,country), (adid,title))
@@ -96,8 +96,8 @@ object Dailyupdate {
       .groupByKey()
       .map{case ((id,country), iter)=>
 
-        (id, (country,iter.toArray))
-      }*/
+        (id, country+"\t"+iter.toArray.mkString("::"))
+      }
 
 
     val idset = Recommodation
@@ -116,9 +116,8 @@ object Dailyupdate {
     //============search from sql database=================
 
     val updatelist = findadpack(sc, ids)
-      .saveAsTextFile(savepath)
 
-      /*.join(Recommodation)
+      .join(Recommodation)
       .map { case (adid, (_, (country, id, delete_title))) =>
 
         ((delete_title, country), id)
@@ -171,17 +170,32 @@ object Dailyupdate {
 
             iditer.map{x=>
 
-              (x,newlist)
+              (x,newlist.mkString("::"))
             }
-        }*/
+        }
 
 
-   /* val finallist = updatelist
-      .join (oldAdidList)
-      .map{case (id,(newlist,(country,oldlist)))=>
+    val finallist = updatelist
+      .fullOuterJoin(oldAdidList)
+      .map{case (id,(newlist,oldlist))=>
 
-        id+"\t"+country+"\t"+(newlist++oldlist).mkString("::")
-      }*/
+        val newList = newlist match{
+
+          case Some(x )=> x
+          case None => ""
+        }
+
+        val oldList = oldlist match {
+
+          case Some(x)=> x
+          case None => ""
+        }
+
+        val country = oldList.split("\t")(0)
+
+        id+"\t"+country+"\t"+newList+"::"+oldList
+      }
+      .saveAsTextFile(savepath)
 
 
 
@@ -199,7 +213,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 1"
+    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 0"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map { x =>
