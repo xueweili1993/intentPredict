@@ -193,7 +193,7 @@ object Dailyupdate {
 
         val country = oldList.split("\t")(0)
 
-        id+"\t"+country+"\t"+newList+"::"+oldList
+        id+"\t"+country+"\t"+newList+"::"+oldList(1)
       }
       .saveAsTextFile(savepath)
 
