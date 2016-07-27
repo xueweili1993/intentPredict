@@ -201,7 +201,7 @@ object Dailyupdate {
         finallist
         .map{ case (id, country, list)=>
 
-          (id+"\t"+country+"\t"+list.mkString("::"))
+          id+"\t"+country+"\t"+list.mkString("::")
 
          }
         .saveAsTextFile(savepath)
