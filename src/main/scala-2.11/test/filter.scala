@@ -57,7 +57,7 @@ object filter {
     caltoday.add(Calendar.DATE, -2)
     val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
     val hdfspath = "hdfs:///lxw/fuzzymatch/"+date+"/*"
-    val savepath = "hdfs:///lxw/fuzzymatchUpdate/"+date+"/*"
+    val savepath = "hdfs:///lxw/fuzzymatchUpdate"+date+"/*"
     HDFS.removeFile(savepath)
 
    /* getdata.GetHistoryData(sc,date)
