@@ -119,7 +119,7 @@ object Dailyupdate {
             val country2adid = iter.toMap
             val falsebit = {
             if (pattern.length < 10)
-              2
+              3
              else
               4
         }
