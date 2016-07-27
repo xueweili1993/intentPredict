@@ -75,8 +75,8 @@ object Dailyupdate {
         val country = Rawarray(1)
 
 
-
-        Rawarray.map { x =>
+        val linearray = Rawarray(2).split("::")
+        linearray.map { x =>
 
           val pair = x.replaceAll("\\(|\\)", "").split(",")
           val adid = pair(0)
@@ -90,6 +90,12 @@ object Dailyupdate {
     val oldAdidList = Recommodation
       .map{case (adid, (country, id, title))=>
 
+        ((id,country), (adid,title))
+      }
+      .groupByKey()
+      .map{case ((id,country), iter)=>
+
+        (id, (country,iter.toArray))
       }
 
 
@@ -104,7 +110,11 @@ object Dailyupdate {
 
     val ids = "(" + idset + ")"
 
-    findadpack(sc, ids)
+
+
+    //============search from sql database=================
+
+    val updatelist = findadpack(sc, ids)
 
       .join(Recommodation)
       .map { case (adid, (_, (country, id, delete_title))) =>
@@ -159,11 +169,18 @@ object Dailyupdate {
 
             iditer.map{x=>
 
-              (x,newlist.mkString(","))
+              (x,newlist)
             }
         }
 
-      .saveAsTextFile(savepath)
+
+    val finallist = updatelist
+      .join (oldAdidList)
+      .map{case (id,(newlist,(country,oldlist)))=>
+
+        id+"\t"+country+"\t"+(newlist++oldlist).mkString("::")
+      }
+
 
 
   }
