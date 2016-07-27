@@ -1,6 +1,8 @@
 package test
 
 import java.sql.DriverManager
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -66,7 +68,7 @@ object Dailyupdate {
 
     //============get the deleted title ======================
 
-    val Recommodation = sc.textFile(path)
+    val Recommodation = sc.textFile(makepath())
       .flatMap { case line =>
 
         val Rawarray = line.split("\t")
@@ -219,7 +221,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 0"
+    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 1"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map { x =>
@@ -265,6 +267,29 @@ object Dailyupdate {
     conn.close()
 
     rddadinfo
+  }
+
+  def makepath()={
+
+    val allpath = new ArrayBuffer[String]()
+
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -1)
+
+    for (i<- 1 to 29) {
+      //val caltoday = Calendar.getInstance()
+      caltoday.add(Calendar.DATE, -1)
+      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+      val tempath= "hdfs:///lxw/fuzzymatch/"+date
+
+      if (HDFS.existFile(tempath)) {
+        val tempath1 = tempath+"/*"
+        allpath += tempath1
+      }
+
+
+    }
+    allpath.toArray.mkString(",")
   }
 
 
