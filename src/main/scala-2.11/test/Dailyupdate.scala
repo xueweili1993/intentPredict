@@ -196,7 +196,7 @@ object Dailyupdate {
 
         val country = oldList._1
 
-        (id, country, (newList++oldList._2))
+        (id, country, (newList++oldList._2).take(3))
       }
 
         finallist
