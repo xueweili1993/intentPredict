@@ -29,9 +29,9 @@ object Dailyupdate {
     val hadoopConf = sc.hadoopConfiguration
 
 
-    val path = "hdfs:///lxw/awsdata"
+    val path = "hdfs:///lxw/awsdata1"
 
-    val savepath = "hdfs:///lxw/test3"
+    val savepath = "hdfs:///lxw/awsdata1"
 
     HDFS.removeFile(savepath)
 
@@ -203,6 +203,8 @@ object Dailyupdate {
 
         (id, country, (newList++oldList._2).take(3))
       }
+
+    HDFS.removeFile(savepath)
 
         finallist
         .map{ case (id, country, list)=>

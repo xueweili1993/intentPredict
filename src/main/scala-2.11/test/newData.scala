@@ -1,5 +1,7 @@
 package test
 
+
+
 import org.apache.spark.{SparkConf, SparkContext}
 
 import org.apache.spark.mllib.clustering.{DistributedLDAModel, LDA}
@@ -28,6 +30,8 @@ object newData {
     HDFS.removeFile(savepath)
 
     // Load and parse the data
+
+
     val data = sc.textFile(path)
     val parsedData = data.map(s => Vectors.dense(s.trim.split(' ').map(_.toDouble)))
     // Index documents with unique IDs
