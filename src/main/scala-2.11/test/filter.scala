@@ -52,7 +52,7 @@ object filter {
 
 
 
-   for (i<- 2 to 18) {
+   for (i<- 2 to 10) {
      val caltoday = Calendar.getInstance()
      caltoday.add(Calendar.DATE, -i)
      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
@@ -64,7 +64,7 @@ object filter {
      Fuzzymatch(sc, hdfspath, savepath)
    }
 
-    val path  = "hdfs:///lxw/awsdata"
+    val path  = "hdfs:///lxw/awsdata1"
     HDFS.removeFile(path)
 
     sc.textFile(makepath())
