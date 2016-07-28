@@ -33,7 +33,7 @@ object Dailyupdate {
 
     val savepath = "hdfs:///lxw/awsdata1"
 
-    HDFS.removeFile(savepath)
+
 
     //=================== get all available  title ==================
     val title = TitleWithCountryAdid(sc)
@@ -240,7 +240,7 @@ object Dailyupdate {
 
     jdbcDF.registerTempTable("ad")
 
-    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 0"
+    val sqlcmd = "select id from ad where id in " + myset + "and is_deleted = 1"
     //val sqlcmd = "select app_id from app"
     val jdbc = jdbcDF.sqlContext.sql(sqlcmd)
       .map { x =>
