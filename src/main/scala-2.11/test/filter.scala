@@ -64,13 +64,20 @@ object filter {
 //     Fuzzymatch(sc, hdfspath, savepath)
 
 
-    val path  = "hdfs:///lxw/awsdata"
+    /*val path  = "hdfs:///lxw/awsdata"
     HDFS.removeFile(path)
 
     sc.textFile(makepath())
-      .saveAsTextFile(path)
+      .saveAsTextFile(path)*/
 
+    val caltoday = Calendar.getInstance()
+    caltoday.add(Calendar.DATE, -29)
+    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
 
+    val deletepath1 = "hdfs:///lxw/fuzzymatch/" + date
+    HDFS.removeFile(deletepath1)
+    val deletepath2 = "hdfs:///lxw/fuzzymatchUpdate/" + date
+    HDFS.removeFile(deletepath2)
 
   }
 
@@ -256,10 +263,10 @@ object filter {
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
       val tempath= "hdfs:///lxw/fuzzymatchUpdate/"+date
 
-      //if (HDFS.existFile(tempath)) {
+      if (HDFS.existFile(tempath)) {
         val tempath1 = tempath+"/*"
         allpath += tempath1
-      //}
+      }
 
 
     }
