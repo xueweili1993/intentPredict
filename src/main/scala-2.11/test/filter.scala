@@ -54,7 +54,7 @@ object filter {
 
    for (i<- 2 to 18) {
      val caltoday = Calendar.getInstance()
-     caltoday.add(Calendar.DATE, -2)
+     caltoday.add(Calendar.DATE, -i)
      val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
      val hdfspath = "hdfs:///lxw/fuzzymatch/" + date + "/*"
      val savepath = "hdfs:///lxw/fuzzymatchUpdate/" + date
