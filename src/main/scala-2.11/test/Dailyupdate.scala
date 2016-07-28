@@ -29,9 +29,9 @@ object Dailyupdate {
     val hadoopConf = sc.hadoopConfiguration
 
 
-    val path = "hdfs:///lxw/awsdata1"
+    val path = "hdfs:///lxw/awsdata"
 
-    val savepath = "hdfs:///lxw/awsdata1"
+    val savepath = "hdfs:///lxw/awsdata"
 
 
 
