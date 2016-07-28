@@ -6,6 +6,7 @@ import java.util.Calendar
 
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
+import redis.clients.jedis.Jedis
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -13,6 +14,10 @@ import scala.collection.mutable.ArrayBuffer
   * Created by xinmei on 16/7/26.
   */
 object Dailyupdate {
+
+
+  val REDISTTL = 24*3600 //1 day
+  val STRATEGY = "FM"
 
   def main(args: Array[String]) = {
 
@@ -207,18 +212,15 @@ object Dailyupdate {
          }
         .saveAsTextFile(savepath)
 
-    /*val saveredis = finallist.map{case line =>
+    val saveredisData = finallist
+      .map{case (id, country,newList) =>
 
-        val linearray = line.split("\t")
-        val id  = linearray(0)
-        val adidlist = linearray(2).split("::")
-          if
-          .map{x=>
+        (id, newList.map(x=> x._1))
 
-            val adid = x.replaceAll("\\(|\\)","").split(",")(0)
-            (id,adid)
-          }
-    }*/
+    }
+      .collect()
+
+    save2redis(saveredisData)
 
 
 
@@ -282,6 +284,27 @@ object Dailyupdate {
     conn.close()
 
     rddadinfo
+  }
+
+  def save2redis(user2adlist:Array[(String,Array[String])])={
+
+    val jedis = new Jedis("xinmei-ad-ec-redis0.ujh2od.0001.usw2.cache.amazonaws.com")
+    val p = jedis.pipelined()
+    for(item<- user2adlist){
+      val adidlist = STRATEGY + "::" +  item._2.mkString(",")
+
+      p.setex(item._1, REDISTTL,adidlist)
+
+
+      /*println("lxw-log id " + item._1)
+      println("gyy-log adid " + adidlist)*/
+
+    }
+    p.sync();//这段代码获取所有的response
+
+    p.close()
+    jedis.close()
+
   }
 
 
