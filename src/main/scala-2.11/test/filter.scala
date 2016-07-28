@@ -52,17 +52,17 @@ object filter {
 
 
 
-   for (i<- 11 to 28) {
-     val caltoday = Calendar.getInstance()
-     caltoday.add(Calendar.DATE, -i)
-     val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
-     val hdfspath = "hdfs:///lxw/fuzzymatch/" + date + "/*"
-     val savepath = "hdfs:///lxw/fuzzymatchUpdate/" + date
-     HDFS.removeFile(savepath)
 
-     getdata.GetHistoryData(sc, date)
-     Fuzzymatch(sc, hdfspath, savepath)
-   }
+//    val caltoday = Calendar.getInstance()
+//    caltoday.add(Calendar.DATE, -2)
+//    val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
+//    val hdfspath = "hdfs:///lxw/fuzzymatch/" + date + "/*"
+//    val savepath = "hdfs:///lxw/fuzzymatchUpdate/" + date
+//    HDFS.removeFile(savepath)
+//
+//     getdata.GetHistoryData(sc, date)
+//     Fuzzymatch(sc, hdfspath, savepath)
+
 
     val path  = "hdfs:///lxw/awsdata"
     HDFS.removeFile(path)
@@ -250,16 +250,16 @@ object filter {
     val caltoday = Calendar.getInstance()
     caltoday.add(Calendar.DATE, -1)
 
-    for (i<- 1 to 17) {
+    for (i<- 1 to 27) {
       //val caltoday = Calendar.getInstance()
       caltoday.add(Calendar.DATE, -1)
       val date = new SimpleDateFormat("yyyyMMdd").format(caltoday.getTime())
       val tempath= "hdfs:///lxw/fuzzymatchUpdate/"+date
 
-      if (HDFS.existFile(tempath)) {
+      //if (HDFS.existFile(tempath)) {
         val tempath1 = tempath+"/*"
         allpath += tempath1
-      }
+      //}
 
 
     }
