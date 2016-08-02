@@ -89,12 +89,12 @@ object LDAtrain {
 
       }
       .reduceByKey(_+" "+_)
-     /* .map{case ((appId,cate),text)=>
+      .map{case ((appId,cate),text)=>
 
         (cate,1)
       }
       .reduceByKey(_+_)
-      .repartition(1)*/
+      .repartition(1)
       .saveAsTextFile(savepath)
 
 
