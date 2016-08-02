@@ -92,6 +92,10 @@ object LDAtrain {
         }
 
       }
+      .filter{case ((appId,cate),word)=>
+
+          word.length>3
+      }
 
 
 
@@ -178,7 +182,7 @@ object LDAtrain {
         }
         wordWeight.append((words,topics(word,topic)))
       }
-      val sortedarray = wordWeight.toArray.sortWith(_._2>_._2).take(20)
+      val sortedarray = wordWeight.toArray.sortWith(_._2>_._2).take(100)
       sortedarray.foreach(x=>
 
         print(x+",")
