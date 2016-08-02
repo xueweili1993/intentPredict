@@ -95,7 +95,7 @@ object LDAtrain {
 
 
 
-    bStop.destroy()
+
     val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
