@@ -171,7 +171,7 @@ object LDAtrain {
       val wordWeight = new ArrayBuffer[(String,Double)]()
 
       for (word <- Range(0, ldaModel.vocabSize)) {
-        val words = wordTable2.get(words) match{
+        val words = wordTable2.get(word) match{
           case Some(x)=> x
           case None => ""
         }
