@@ -148,8 +148,9 @@ object LDAtrain {
 
         (id,Vec)
       }
+      .repartition(50)
 
-    //broadwordTable.destroy()
+
 
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
@@ -160,7 +161,7 @@ object LDAtrain {
     val ldaModel = new LDA().setK(10).run(corpus)
 
     val topics = ldaModel.topicsMatrix
-    //val broadTopic  =  sc.broadcast(topics)
+
 
 
 
