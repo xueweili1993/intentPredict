@@ -1,6 +1,10 @@
 package test
 
+import org.apache.spark.mllib.clustering.LDA
+import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.collection.mutable.ArrayBuffer
 
 /**
   * Created by xinmei on 16/8/2.
@@ -88,14 +92,99 @@ object LDAtrain {
         }
 
       }
-      .reduceByKey(_+" "+_)
-      .map{case ((appid,cate),text)=>
 
-        (cate,1)
-      }
+
+
+    bStop.destroy()
+    val wordTable  = AppWithDesc.map(x=>
+      x._2)
+      .distinct()
+      .collect()
+      .zipWithIndex
+
+    val length = wordTable.length
+    val wordTable1 = wordTable
+      .toMap
+    val wordTable2 = wordTable.map(_.swap)
+      .toMap
+
+
+    val broadwordTable = sc.broadcast(wordTable1)
+
+    val userTable  = AppWithDesc.map{case (id, word)=>
+
+      ((id, word),1)
+    }
       .reduceByKey(_+_)
-      .repartition(1)
-      .saveAsTextFile(savepath)
+      .map{case ((id,word),num)=>
+
+        (id,(word,num))
+      }
+      .groupByKey()
+      .map{case (id, iter)=>
+
+        val words_table  = broadwordTable.value
+        val indexA = new ArrayBuffer[Int]()
+        val freA  = new ArrayBuffer[Double]()
+
+        iter.foreach(x=>
+          if (words_table.contains(x._1)){
+
+            val freq = x._2
+            val index = words_table.get(x._1) match{
+
+              case Some(x) => x
+              case None => 0
+
+            }
+
+            indexA.append(index)
+            freA.append(freq)
+          }
+
+        )
+
+        val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
+
+        (id,Vec)
+      }
+
+    //broadwordTable.destroy()
+
+    val raw = userTable.zipWithIndex
+    val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
+    val idWPithIndex = raw.map(x=>(x._2,x._1._1))
+      //.collect()
+
+
+    val ldaModel = new LDA().setK(10).run(corpus)
+
+    val topics = ldaModel.topicsMatrix
+    //val broadTopic  =  sc.broadcast(topics)
+
+
+
+
+    for (topic <- Range(0, 10)) {
+      print("Topic " + topic + ":")
+
+      val wordWeight = new ArrayBuffer[(String,Double)]()
+
+      for (word <- Range(0, ldaModel.vocabSize)) {
+        val words = wordTable2.get(words) match{
+          case Some(x)=> x
+          case None => ""
+        }
+        wordWeight.append((words,topics(word,topic)))
+      }
+      val sortedarray = wordWeight.toArray.sortWith(_._2>_._2)
+      sortedarray.foreach(x=>
+
+        print(x+",")
+      )
+
+    }
+
 
   }
 
