@@ -178,7 +178,7 @@ object LDAtrain {
         }
         wordWeight.append((words,topics(word,topic)))
       }
-      val sortedarray = wordWeight.toArray.sortWith(_._2>_._2)
+      val sortedarray = wordWeight.toArray.sortWith(_._2>_._2).take(20)
       sortedarray.foreach(x=>
 
         print(x+",")
