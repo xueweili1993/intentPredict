@@ -94,7 +94,7 @@ object LDAtrain {
         (cate,1)
       }
       .reduceByKey(_+_)
-      .repartition(1)
+      //.repartition(1)
       .saveAsTextFile(savepath)
 
 
