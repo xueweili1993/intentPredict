@@ -57,7 +57,7 @@ object LDAtrain {
           (appId,text)
         }
       .join(AppWithCate)
-      .repartition(1000)
+      .repartition(500)
       .flatMap{case (appId, (text,cate))=>
 
         val stop  = bStop.value
