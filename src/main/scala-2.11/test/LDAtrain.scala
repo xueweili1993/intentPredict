@@ -33,7 +33,7 @@ object LDAtrain {
         try {
           val linearray = line.split("\t")
           val appId = linearray(0)
-          val category = line(1)
+          val category = linearray(1)
           Some((appId, category))
         }
           catch{
@@ -43,7 +43,8 @@ object LDAtrain {
       }
 
     val AppWithDesc = sc.textFile(descPath)
-      .flatMap{case line =>
+
+      .map{case line =>
 
           val linearray  = line.split("\t")
           val appId = linearray(0)
@@ -53,6 +54,10 @@ object LDAtrain {
             else
               ""
           }
+          (appId,text)
+        }
+      .join(AppWithCate)
+      .flatMap{case (appId, (text,cate))=>
 
         val stop  = bStop.value
         val words = text.split(" ")
