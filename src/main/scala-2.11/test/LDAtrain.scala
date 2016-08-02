@@ -14,8 +14,8 @@ object LDAtrain {
     val sc = new SparkContext(conf)
     val hadoopConf = sc.hadoopConfiguration
 
-    val catePath = "hdfs:///lxw/AppWithCate/* "
-    val descPath = "hdfs:///lxw/AppWithDiscreption/*"
+    val catePath = "hdfs:///lxw/AppWithCate/part-00000"
+    val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
     val stoppath = "hdfs:///lxw/stopwords"
 
     val savepath = "hdfs:///lxw/test1"
