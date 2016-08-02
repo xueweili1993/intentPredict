@@ -80,7 +80,7 @@ object LDAtrain {
 
           if (stop.contains(x1))
           {
-            ("","")
+            (("",""),"")
           }
           else{
             ((appId,cate),x1)
@@ -89,16 +89,13 @@ object LDAtrain {
 
       }
       .reduceByKey(_+" "+_)
-      .map{case ((appId,cate),text)=>
+      .map{case ((appid,cate),text)=>
 
         (cate,1)
       }
       .reduceByKey(_+_)
-      //.repartition(1)
+      .repartition(1)
       .saveAsTextFile(savepath)
-
-
-
 
   }
 
