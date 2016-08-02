@@ -20,12 +20,12 @@ object LDAtrain {
 
     val savepath = "hdfs:///lxw/test1"
     HDFS.removeFile(savepath)
-//
-//    val stopwords = sc.textFile(stoppath)
-//      .collect()
-//      .toSet
-//
-//    val bStop = sc.broadcast(stopwords)
+
+    val stopwords = sc.textFile(stoppath)
+      .collect()
+      .toSet
+
+    val bStop = sc.broadcast(stopwords)
 
 
     val AppWithCate = sc.textFile(catePath)
@@ -57,37 +57,38 @@ object LDAtrain {
           (appId,text)
         }
       .join(AppWithCate)
-//      .flatMap{case (appId, (text,cate))=>
-//
-//        val stop  = bStop.value
-//        val words = text.split(" ")
-//
-//        words.map{x=>
-//
-//          var stemmer = new Stemmer()
-//          stemmer.add(x.trim())
-//          if ( stemmer.b.length > 2 )
-//          {
-//            stemmer.step1()
-//            stemmer.step2()
-//            stemmer.step3()
-//            stemmer.step4()
-//            stemmer.step5a()
-//            stemmer.step5b()
-//          }
-//          val x1 = stemmer.b
-//
-//          if (stop.contains(x1))
-//          {
-//            ("","")
-//          }
-//          else{
-//            (appId,x1)
-//          }
-//        }
-//
-//      }
-//      .reduceByKey(_+" "+_)
+      .repartition(1000)
+      .flatMap{case (appId, (text,cate))=>
+
+        val stop  = bStop.value
+        val words = text.split(" ")
+
+        words.map{x=>
+
+          var stemmer = new Stemmer()
+          stemmer.add(x.trim())
+          if ( stemmer.b.length > 2 )
+          {
+            stemmer.step1()
+            stemmer.step2()
+            stemmer.step3()
+            stemmer.step4()
+            stemmer.step5a()
+            stemmer.step5b()
+          }
+          val x1 = stemmer.b
+
+          if (stop.contains(x1))
+          {
+            ("","")
+          }
+          else{
+            (appId,x1)
+          }
+        }
+
+      }
+      .reduceByKey(_+" "+_)
       .saveAsTextFile(savepath)
 
 
