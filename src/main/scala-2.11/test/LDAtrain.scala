@@ -83,13 +83,20 @@ object LDAtrain {
             ("","")
           }
           else{
-            (appId,x1)
+            ((appId,cate),x1)
           }
         }
 
       }
       .reduceByKey(_+" "+_)
+      .map{case ((appId,cate),text)=>
+
+        (cate,1)
+      }
+      .reduceByKey(_+_)
       .saveAsTextFile(savepath)
+
+
 
 
   }
