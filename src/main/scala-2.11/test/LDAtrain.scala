@@ -170,7 +170,7 @@ object LDAtrain {
 
     val ldaModel = new LDA()
       .setOptimizer("online")
-      .setK(8)
+      .setK(15)
       .run(corpus)
 
     val topics = ldaModel.topicsMatrix
@@ -179,7 +179,7 @@ object LDAtrain {
 
     val mapp = new HashMap[String,Int]()
 
-    for (topic <- Range(0,8)){
+    for (topic <- Range(0,15)){
 
       val textunit = DocTopic(topic)
       val textid = textunit._1
