@@ -216,7 +216,7 @@ object LDAtrain {
 
     mapp.toArray.sortWith(_._2>_._2)foreach(x=>
 
-      println ("lxw log :" + x)
+      print ("lxw log :" + x+ " ")
     )
 
 
