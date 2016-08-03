@@ -179,7 +179,7 @@ object LDAtrain {
 
     val mapp = new HashMap[String,Int]()
 
-    for (topic <- Range(0,10)){
+    for (topic <- Range(0,5)){
 
       val textunit = DocTopic(topic)
       val textid = textunit._1
