@@ -30,7 +30,7 @@ object LDAtrain {
       .collect()
       .toSet
 
-    //val stopArray = Array("http","facebook","mobil","download","featur","internet","devic","free","video","")
+    val stopArray = Array("http","facebook","mobil","download","featur","internet","free","video","android")
 
     val bStop = sc.broadcast(stopwords)
 
@@ -85,7 +85,7 @@ object LDAtrain {
           }
           val x1 = stemmer.b
 
-          if (stop.contains(x1))
+          if (stop.contains(x1)||stopArray.contains(x1))
           {
             (("",""),"")
           }
@@ -170,7 +170,7 @@ object LDAtrain {
 
     val ldaModel = new LDA()
       .setOptimizer("online")
-      .setK(5)
+      .setK(8)
       .run(corpus)
 
     val topics = ldaModel.topicsMatrix
@@ -179,7 +179,7 @@ object LDAtrain {
 
     val mapp = new HashMap[String,Int]()
 
-    for (topic <- Range(0,5)){
+    for (topic <- Range(0,8)){
 
       val textunit = DocTopic(topic)
       val textid = textunit._1
