@@ -173,7 +173,7 @@ object LDAtrain {
     val DocTopic  = ldaModel.describeTopics(10)
 
 
-    for (topic <- Range(0,10)){
+    for (topic <- Range(0,20)){
 
       val textunit = DocTopic(topic)
       val textid = textunit._1
@@ -182,9 +182,9 @@ object LDAtrain {
       println ("Topic: "+ topic+ " ")
 
       for (i<-0 to length-1){
-        val text = idWPithIndex.get(textid(i)) match {
+        val text = wordTable2.get(textid(i)) match {
           case Some(x)=> x
-          case None => ("","")
+          case None => ""
         }
         val weight =textunit._2(i)
 
