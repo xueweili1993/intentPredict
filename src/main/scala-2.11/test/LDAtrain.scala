@@ -191,6 +191,7 @@ object LDAtrain {
           case None => ""
         }
         val weight =textunit._2(i)
+
         if (mapp.contains(text)){
 
           val count  = mapp.get(text) match{
@@ -199,10 +200,11 @@ object LDAtrain {
 
           }
           val newcount = count+1
-          mapp.updated(text,newcount)
+          mapp.remove(text)
+          mapp.put(text,newcount)
         }
         else {
-          mapp += (text ->1)
+          mapp.put(text,1)
         }
 
         print (text + ":"+ weight+" ")
