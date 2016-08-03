@@ -1,6 +1,6 @@
 package test
 
-import org.apache.spark.mllib.clustering.LDA
+import org.apache.spark.mllib.clustering.{DistributedLDAModel, LDA, LocalLDAModel}
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -159,19 +159,44 @@ object LDAtrain {
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
     val idWPithIndex = raw.map(x=>(x._2,x._1._1))
-      //.collect()
+      .collect()
+      .toMap
 
 
-    val ldaModel = new LDA().setK(10).run(corpus)
+    val ldaModel = new LDA()
+      .setOptimizer("online")
+      .setK(10)
+      .run(corpus)
 
     val topics = ldaModel.topicsMatrix
 
+    val DocTopic  = ldaModel.describeTopics(10)
 
+
+    for (topic <- Range(0,10)){
+
+      val textunit = DocTopic(topic)
+      val textid = textunit._1
+      val length = textid.length
+
+      println ("Topic: "+ topic+ " ")
+
+      for (i<-0 to length-1){
+        val text = idWPithIndex.get(textid(i)) match {
+          case Some(x)=> x
+          case None => ("","")
+        }
+        val weight =textunit._2(i)
+
+        print (text + ":"+ weight+" ")
+      }
+
+    }
 
 
 
     for (topic <- Range(0, 10)) {
-      print("Topic " + topic + ":")
+      println("Topic " + topic + ":")
 
       val wordWeight = new ArrayBuffer[(String,Double)]()
 
@@ -189,6 +214,15 @@ object LDAtrain {
       )
 
     }
+
+
+    HDFS.removeFile("hdfs:///lxw/ldamodel")
+    ldaModel.save(sc,"hdfs:///lxw/ldamodel")
+
+    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
+
+
+
 
 
   }
