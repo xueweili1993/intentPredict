@@ -114,6 +114,8 @@ object LDAtrain {
       .toMap
 
 
+
+
     val broadwordTable = sc.broadcast(wordTable1)
 
     val userTable  = AppWithDesc.map{case (id, word)=>
@@ -208,7 +210,7 @@ object LDAtrain {
 
     }
 
-    mapp.foreach(x=>
+    mapp.toArray.sortWith(_._2>_._2)foreach(x=>
 
       println ("lxw log :" + x)
     )
@@ -240,6 +242,48 @@ object LDAtrain {
     ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
     val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
+
+   /* val DocTopic  = sameModel.describeTopics(100)
+
+    val mapp = new HashMap[String,Int]()
+
+    for (topic <- Range(0,10)){
+
+      val textunit = DocTopic(topic)
+      val textid = textunit._1
+      val length = textid.length
+
+      println ("Topic: "+ topic+ " ")
+
+      for (i<-0 to length-1){
+        val text = wordTable2.get(textid(i)) match {
+          case Some(x)=> x
+          case None => ""
+        }
+        val weight =textunit._2(i)
+        if (mapp.contains(text)){
+
+          val count  = mapp.get(text) match{
+            case Some(x)=> x
+            case None=> 0
+
+          }
+          val newcount = count+1
+          mapp.updated(text,newcount)
+        }
+        else {
+          mapp += (text ->1)
+        }
+
+        print (text + ":"+ weight+" ")
+      }
+
+    }
+
+    mapp.toArray.sortWith(_._2>_._2)foreach(x=>
+
+      println ("lxw log :" + x)
+      )*/
 
 
 
