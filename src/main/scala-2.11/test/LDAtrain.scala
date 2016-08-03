@@ -30,6 +30,8 @@ object LDAtrain {
       .collect()
       .toSet
 
+    //val stopArray = Array("http","facebook","mobil","download","featur","internet","devic","free","video","")
+
     val bStop = sc.broadcast(stopwords)
 
 
@@ -168,7 +170,7 @@ object LDAtrain {
 
     val ldaModel = new LDA()
       .setOptimizer("online")
-      .setK(10)
+      .setK(5)
       .run(corpus)
 
     val topics = ldaModel.topicsMatrix
