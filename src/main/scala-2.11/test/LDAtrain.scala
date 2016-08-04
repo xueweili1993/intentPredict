@@ -196,7 +196,7 @@ object LDAtrain {
       .toMap
 
 
-    val ldaModel = new LDA()
+    /*val ldaModel = new LDA()
       .setOptimizer("online")
       .setK(15)
       .run(corpus)
@@ -271,7 +271,7 @@ object LDAtrain {
 
 
     HDFS.removeFile("hdfs:///lxw/ldamodel")
-    ldaModel.save(sc,"hdfs:///lxw/ldamodel")
+    ldaModel.save(sc,"hdfs:///lxw/ldamodel")*/
 
     val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
 
