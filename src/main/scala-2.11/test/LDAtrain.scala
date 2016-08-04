@@ -270,10 +270,10 @@ object LDAtrain {
     }*/
 
 
-    HDFS.removeFile("hdfs:///lxw/ldamodel")
+    /*HDFS.removeFile("hdfs:///lxw/ldamodel")
     ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
-    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
+    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")*/
 
 
 
