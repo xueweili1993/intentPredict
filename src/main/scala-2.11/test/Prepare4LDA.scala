@@ -107,12 +107,8 @@ object Prepare4LDA {
 
          word+":"+index
       }
-      .saveAsTextFile(savepath)
-
-   // val length = wordTable.length
-    val wordTable1 = wordTable
-
-   // val wordTable2 = wordTable.map(_.swap)
+      .repartition(1)
+      . saveAsTextFile(savepath)
 
 
   }

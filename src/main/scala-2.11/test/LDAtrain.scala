@@ -23,7 +23,7 @@ object LDAtrain {
     val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
     val stoppath = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/test1"
+    val savepath = "hdfs:///lxw/test"
     HDFS.removeFile(savepath)
 
     val stopwords = sc.textFile(stoppath)
@@ -103,7 +103,7 @@ object LDAtrain {
 
 
 
-    val wordTable  = AppWithDesc.map(x=>
+    /*val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
       .collect()
@@ -115,10 +115,37 @@ object LDAtrain {
     val wordTable2 = wordTable.map(_.swap)
       .toMap
 
+    val broadwordTable = sc.broadcast(wordTable1)*/
 
+    val wordtablePath = "hdfs:///lxw/test1"
 
+    val wordTable = sc.textFile(wordtablePath)
+      .flatMap{case line=>
+
+          val linearray = line.split(":")
+          if (linearray.length>1)
+            {
+              Some((linearray(0),linearray(1).toInt))
+            }
+          else {
+            None
+          }
+      }
+      .saveAsTextFile(savepath)
+      //.collect()
+
+    /*val length = wordTable.length
+    val wordTable1 = wordTable
+      .toMap
+    val wordTable2 = wordTable.map(_.swap)
+      .toMap
 
     val broadwordTable = sc.broadcast(wordTable1)
+
+
+
+
+
 
     val userTable  = AppWithDesc.map{case (id, word)=>
 
@@ -143,12 +170,13 @@ object LDAtrain {
             val index = words_table.get(x._1) match{
 
               case Some(x) => x
-              case None => 0
+              case None => -1
 
             }
-
-            indexA.append(index)
-            freA.append(freq)
+            if (index!= -1) {
+              indexA.append(index)
+              freA.append(freq)
+            }
           }
 
         )
@@ -217,7 +245,7 @@ object LDAtrain {
     mapp.toArray.sortWith(_._2>_._2)foreach(x=>
 
       print ("lxw log :" + x+ " ")
-    )
+    )*/
 
 
 
@@ -246,50 +274,6 @@ object LDAtrain {
     ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
     val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
-
-   /* val DocTopic  = sameModel.describeTopics(100)
-
-    val mapp = new HashMap[String,Int]()
-
-    for (topic <- Range(0,10)){
-
-      val textunit = DocTopic(topic)
-      val textid = textunit._1
-      val length = textid.length
-
-      println ("Topic: "+ topic+ " ")
-
-      for (i<-0 to length-1){
-        val text = wordTable2.get(textid(i)) match {
-          case Some(x)=> x
-          case None => ""
-        }
-        val weight =textunit._2(i)
-        if (mapp.contains(text)){
-
-          val count  = mapp.get(text) match{
-            case Some(x)=> x
-            case None=> 0
-
-          }
-          val newcount = count+1
-          mapp.updated(text,newcount)
-        }
-        else {
-          mapp += (text ->1)
-        }
-
-        print (text + ":"+ weight+" ")
-      }
-
-    }
-
-    mapp.toArray.sortWith(_._2>_._2)foreach(x=>
-
-      println ("lxw log :" + x)
-      )*/
-
-
 
 
 
