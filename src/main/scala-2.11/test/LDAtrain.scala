@@ -276,6 +276,15 @@ object LDAtrain {
     val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
 
 
+    val distribution  = sameModel.topicDistributions(corpus)
+        .map{case (index, vec)=>
+
+            val kk = vec.toArray.mkString(",")
+          (index, kk)
+        }
+      .saveAsTextFile(savepath)
+
+
 
   }
 
