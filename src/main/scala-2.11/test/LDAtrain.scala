@@ -149,17 +149,17 @@ object LDAtrain {
 
 
 // == id : appId,cate=====
-    val userTable  = AppWithDesc.map{case (id, word)=>
+    val userTable  = AppWithDesc.map{case ((appId,category), word)=>
 
-      ((id, word),1)
+      ((category, word),1)
     }
       .reduceByKey(_+_)
-      .map{case ((id,word),num)=>
+      .map{case ((category,word),num)=>
 
-        (id,(word,num))
+        (category,(word,num))
       }
       .groupByKey()
-      .map{case (id, iter)=>
+      .map{case (category, iter)=>
 
         val words_table  = broadwordTable.value
         val indexA = new ArrayBuffer[Int]()
@@ -185,7 +185,7 @@ object LDAtrain {
 
         val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
 
-        (id,Vec)
+        (category,Vec)
       }
       .repartition(50)
 
@@ -193,7 +193,7 @@ object LDAtrain {
 
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
-    val idWPithIndex = raw.map(x=>(x._2,x._1._1._2))
+    val idWPithIndex = raw.map(x=>(x._2,x._1._1))
       .collect()
       .toMap
 
