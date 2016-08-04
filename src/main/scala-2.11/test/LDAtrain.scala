@@ -298,7 +298,24 @@ object LDAtrain {
 
           (cate, ind, weight)
         }
+      //.saveAsTextFile(savepath)
+      .map{case (cate, ind, weight)=>
+
+          ((cate,ind),1)
+        }
+      .reduceByKey(_+_)
+      .map{case ((cate,ind),num)=>
+
+        (cate,(ind,num))
+      }
+      .groupByKey()
+      .map{case (cate,iter)=>
+
+          val numm = iter.toArray.mkString("\t")
+        (cate, numm)
+      }
       .saveAsTextFile(savepath)
+
 
 
 
