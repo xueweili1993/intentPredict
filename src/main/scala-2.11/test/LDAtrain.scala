@@ -196,56 +196,56 @@ object LDAtrain {
       .toMap
 
 
-    /*val ldaModel = new LDA()
+    val ldaModel = new LDA()
       .setOptimizer("online")
-      .setK(15)
+      .setK(10)
       .run(corpus)
 
-    val topics = ldaModel.topicsMatrix
-
-    val DocTopic  = ldaModel.describeTopics(100)
-
-    val mapp = new HashMap[String,Int]()
-
-    for (topic <- Range(0,15)){
-
-      val textunit = DocTopic(topic)
-      val textid = textunit._1
-      val length = textid.length
-
-      println ("Topic: "+ topic+ " ")
-
-      for (i<-0 to length-1){
-        val text = wordTable2.get(textid(i)) match {
-          case Some(x)=> x
-          case None => ""
-        }
-        val weight =textunit._2(i)
-
-        if (mapp.contains(text)){
-
-          val count  = mapp.get(text) match{
-            case Some(x)=> x
-            case None=> 0
-
-          }
-          val newcount = count+1
-          mapp.remove(text)
-          mapp.put(text,newcount)
-        }
-        else {
-          mapp.put(text,1)
-        }
-
-        print (text + ":"+ weight+" ")
-      }
-
-    }
-
-    mapp.toArray.sortWith(_._2>_._2)foreach(x=>
-
-      print ("lxw log :" + x+ " ")
-    )
+//    val topics = ldaModel.topicsMatrix
+//
+//    val DocTopic  = ldaModel.describeTopics(100)
+//
+//    val mapp = new HashMap[String,Int]()
+//
+//    for (topic <- Range(0,10)){
+//
+//      val textunit = DocTopic(topic)
+//      val textid = textunit._1
+//      val length = textid.length
+//
+//      println ("Topic: "+ topic+ " ")
+//
+//      for (i<-0 to length-1){
+//        val text = wordTable2.get(textid(i)) match {
+//          case Some(x)=> x
+//          case None => ""
+//        }
+//        val weight =textunit._2(i)
+//
+//        if (mapp.contains(text)){
+//
+//          val count  = mapp.get(text) match{
+//            case Some(x)=> x
+//            case None=> 0
+//
+//          }
+//          val newcount = count+1
+//          mapp.remove(text)
+//          mapp.put(text,newcount)
+//        }
+//        else {
+//          mapp.put(text,1)
+//        }
+//
+//        print (text + ":"+ weight+" ")
+//      }
+//
+//    }
+//
+//    mapp.toArray.sortWith(_._2>_._2)foreach(x=>
+//
+//      print ("lxw log :" + x+ " ")
+//    )
 
 
 
@@ -271,7 +271,7 @@ object LDAtrain {
 
 
     HDFS.removeFile("hdfs:///lxw/ldamodel")
-    ldaModel.save(sc,"hdfs:///lxw/ldamodel")*/
+    ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
     val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
 
