@@ -146,7 +146,7 @@ object LDAtrain {
 
 
 
-
+// == id : appId,cate=====
     val userTable  = AppWithDesc.map{case (id, word)=>
 
       ((id, word),1)
@@ -191,7 +191,7 @@ object LDAtrain {
 
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
-    val idWPithIndex = raw.map(x=>(x._2,x._1._1))
+    val idWPithIndex = raw.map(x=>(x._2,x._1._1._2))
       .collect()
       .toMap
 
@@ -279,8 +279,24 @@ object LDAtrain {
     val distribution  = sameModel.topicDistributions(corpus)
         .map{case (index, vec)=>
 
-            val kk = vec.toArray.mkString(",")
-          (index, kk)
+            var ind = -1
+            var weight = 0.0
+
+            for (i<- 0 to 14){
+
+              if (vec(i)>0.5){
+
+                 ind = i
+                 weight = vec(i)
+
+              }
+            }
+            val cate = idWPithIndex.get(index) match{
+              case Some (x)=> x
+              case None => ""
+            }
+
+          (cate, ind, weight)
         }
       .saveAsTextFile(savepath)
 
