@@ -131,10 +131,10 @@ object LDAtrain {
             None
           }
       }
-      .saveAsTextFile(savepath)
-      //.collect()
+     // .saveAsTextFile(savepath)
+      .collect()
 
-    /*val length = wordTable.length
+    val length = wordTable.length
     val wordTable1 = wordTable
       .toMap
     val wordTable2 = wordTable.map(_.swap)
@@ -245,7 +245,7 @@ object LDAtrain {
     mapp.toArray.sortWith(_._2>_._2)foreach(x=>
 
       print ("lxw log :" + x+ " ")
-    )*/
+    )
 
 
 
@@ -270,10 +270,10 @@ object LDAtrain {
     }*/
 
 
-    /*HDFS.removeFile("hdfs:///lxw/ldamodel")
+    HDFS.removeFile("hdfs:///lxw/ldamodel")
     ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
-    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")*/
+    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
 
 
 
