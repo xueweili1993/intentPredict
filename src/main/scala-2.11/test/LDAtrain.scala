@@ -12,6 +12,8 @@ import scala.collection.mutable.ArrayBuffer
   */
 object LDAtrain {
 
+  val TopicNum =10
+
   def main (args:Array[String])={
 
     val conf = new SparkConf()
@@ -198,7 +200,7 @@ object LDAtrain {
 
     val ldaModel = new LDA()
       .setOptimizer("online")
-      .setK(10)
+      .setK(TopicNum)
       .run(corpus)
 
 //    val topics = ldaModel.topicsMatrix
@@ -207,7 +209,7 @@ object LDAtrain {
 //
 //    val mapp = new HashMap[String,Int]()
 //
-//    for (topic <- Range(0,10)){
+//    for (topic <- Range(0,TopicNum)){
 //
 //      val textunit = DocTopic(topic)
 //      val textid = textunit._1
@@ -282,7 +284,7 @@ object LDAtrain {
             var ind = -1
             var weight = 0.0
 
-            for (i<- 0 to 14){
+            for (i<- 0 to TopicNum-1){
 
               if (vec(i)>0.5){
 
