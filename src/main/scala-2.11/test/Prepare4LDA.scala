@@ -121,8 +121,11 @@ object Prepare4LDA {
     val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
-      //.subtract(WordCooccureance)
-      .zipWithIndex
+      .subtract(WordCooccureance)
+      .collect()
+      .zip(Stream from 0)
+
+    sc.parallelize(wordTable)
       .map{case (word,index)=>
 
          word+":"+index
