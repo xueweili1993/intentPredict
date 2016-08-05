@@ -12,7 +12,7 @@ import scala.collection.mutable.ArrayBuffer
   */
 object LDAtrain {
 
-  val TopicNum =41
+  val TopicNum =5
 
   def main (args:Array[String])={
 
