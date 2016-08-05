@@ -94,11 +94,31 @@ object Prepare4LDA {
 
         word.length>3
       }
+      .map {case ((appId,cate),word)=>
+
+        (appId,word)
+
+      }
+      .distinct()
+      .map{case (appId, word)=>
+
+        (word, 1)
+      }
+      .reduceByKey(_+_)
+      .collect()
+      .sortWith(_._2>_._2)
+
+    AppWithDesc.foreach(x=>
+
+      println("lxw log"+x)
+    )
 
 
 
 
-    val wordTable  = AppWithDesc.map(x=>
+
+
+    /*val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
       //.collect()
@@ -108,7 +128,7 @@ object Prepare4LDA {
          word+":"+index
       }
       .repartition(1)
-      . saveAsTextFile(savepath)
+      . saveAsTextFile(savepath)*/
 
 
   }

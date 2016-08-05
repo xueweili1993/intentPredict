@@ -275,7 +275,7 @@ object LDAtrain {
     HDFS.removeFile("hdfs:///lxw/ldamodel")
     ldaModel.save(sc,"hdfs:///lxw/ldamodel")
 
-    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
+    /*val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
 
 
     val distribution  = sameModel.topicDistributions(corpus)
@@ -316,7 +316,7 @@ object LDAtrain {
           val numm = iter.toArray.mkString("\t")
         (cate, numm)
       }
-      .saveAsTextFile(savepath)
+      .saveAsTextFile(savepath)*/
 
 
 
