@@ -117,7 +117,7 @@ object Prepare4LDA {
 
           word+":"+index
         }
-
+        .repartition(1)
         . saveAsTextFile(savepath)
 
   }
