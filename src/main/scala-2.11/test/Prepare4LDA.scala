@@ -121,7 +121,7 @@ object Prepare4LDA {
     val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
-      .subtract(WordCooccureance)
+      //.subtract(WordCooccureance)
       .zipWithIndex
       .map{case (word,index)=>
 
