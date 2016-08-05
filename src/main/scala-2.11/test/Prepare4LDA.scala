@@ -109,7 +109,7 @@ object Prepare4LDA {
       .reduceByKey(_+_)
       .filter{case (word,count)=>
 
-          count < 30
+          count < 35
       }
       .map(x=> x._1)
 
