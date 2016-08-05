@@ -122,15 +122,12 @@ object Prepare4LDA {
       x._2)
       .distinct()
       .subtract(WordCooccureance)
-      .collect()
-      .zip(Stream from 0)
-
-    sc.parallelize(wordTable)
+      .zipWithIndex()
       .map{case (word,index)=>
 
          word+":"+index
       }
-      .repartition(1)
+
       . saveAsTextFile(savepath)
 
 
