@@ -199,7 +199,7 @@ object LDAtrain {
 
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
-    val idWPithIndex = raw.map(x=>(x._2,x._1._1))
+    val idWPithIndex = raw.map(x=>(x._2,x._1._2))
       .collect()
       .toMap
 
