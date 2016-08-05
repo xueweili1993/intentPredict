@@ -94,6 +94,8 @@ object Prepare4LDA {
 
         word.length>3
       }
+
+      val WordCooccureance = AppWithDesc
       .map {case ((appId,cate),word)=>
 
         (cate,word)
@@ -105,30 +107,28 @@ object Prepare4LDA {
         (word, 1)
       }
       .reduceByKey(_+_)
-      .collect()
-      .sortWith(_._2>_._2)
+      .filter{case (word,count)=>
 
-    AppWithDesc.foreach(x=>
-
-      println("lxw log"+x)
-    )
+          count < 30
+      }
+      .map(x=> x._1)
 
 
 
 
 
 
-    /*val wordTable  = AppWithDesc.map(x=>
+    val wordTable  = AppWithDesc.map(x=>
       x._2)
       .distinct()
-      //.collect()
+      .subtract(WordCooccureance)
       .zipWithIndex
       .map{case (word,index)=>
 
          word+":"+index
       }
       .repartition(1)
-      . saveAsTextFile(savepath)*/
+      . saveAsTextFile(savepath)
 
 
   }
