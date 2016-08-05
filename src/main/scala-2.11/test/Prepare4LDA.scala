@@ -96,11 +96,11 @@ object Prepare4LDA {
       }
       .map {case ((appId,cate),word)=>
 
-        (appId,word)
+        (cate,word)
 
       }
       .distinct()
-      .map{case (appId, word)=>
+      .map{case (cate, word)=>
 
         (word, 1)
       }
