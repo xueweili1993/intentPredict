@@ -116,7 +116,7 @@ object Prepare4LDA {
       .reduceByKey(_+_)
       .filter{case (word,count)=>
 
-          count < 30
+          count < 3
       }
       .map(x=> x._1)
         .zipWithIndex()
