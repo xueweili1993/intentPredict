@@ -27,6 +27,8 @@ object Prepare4LDA {
 
     val stopArray = Array("http","facebook","mobil","download","featur","internet","free","video","android")
 
+    val cateArray = Array("SHOPPING","GAME_MUSI","SOCIAL","TOOLS","PHOTOGRAPHY")
+
     val bStop = sc.broadcast(stopwords)
 
 
@@ -36,7 +38,12 @@ object Prepare4LDA {
           val linearray = line.split("\t")
           val appId = linearray(0)
           val category = linearray(1)
-          Some((appId, category))
+          if (!cateArray.contains(category)){
+            None
+          }
+          else {
+            Some((appId, category))
+          }
         }
         catch{
           case _: Throwable =>
