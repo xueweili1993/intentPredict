@@ -33,7 +33,7 @@ object LDAtrain {
       .toSet
 
     val stopArray = Array("http","facebook","mobil","download","featur","internet","free","video","android")
-    val cateArray = Array("SHOPPING","GAME_MUSI","SOCIAL","TOOLS","PHOTOGRAPHY")
+    val cateArray = Array("SHOPPING","GAME_MUSIC","SOCIAL","TOOLS","PHOTOGRAPHY")
 
     val bStop = sc.broadcast(stopwords)
 
@@ -157,15 +157,15 @@ object LDAtrain {
 // == id : appId,cate=====
     val userTable  = AppWithDesc.map{case ((appId,category), word)=>
 
-      ((category, word),1)
+      ((appId, word),1)
     }
       .reduceByKey(_+_)
-      .map{case ((category,word),num)=>
+      .map{case ((appId,word),num)=>
 
-        (category,(word,num))
+        (appId,(word,num))
       }
       .groupByKey()
-      .map{case (category, iter)=>
+      .map{case (appId, iter)=>
 
         val words_table  = broadwordTable.value
         val indexA = new ArrayBuffer[Int]()
@@ -191,7 +191,7 @@ object LDAtrain {
 
         val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
 
-        (category,Vec)
+        (appId,Vec)
       }
       .repartition(50)
 

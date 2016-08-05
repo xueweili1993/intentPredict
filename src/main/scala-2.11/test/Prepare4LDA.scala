@@ -27,7 +27,7 @@ object Prepare4LDA {
 
     val stopArray = Array("http","facebook","mobil","download","featur","internet","free","video","android")
 
-    val cateArray = Array("SHOPPING","GAME_MUSI","SOCIAL","TOOLS","PHOTOGRAPHY")
+    val cateArray = Array("SHOPPING","GAME_MUSIC","SOCIAL","TOOLS","PHOTOGRAPHY")
 
     val bStop = sc.broadcast(stopwords)
 
