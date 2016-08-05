@@ -157,7 +157,7 @@ object LDAtrain {
 // == id : appId,cate=====
     val userTable  = AppWithDesc.map{case ((appId,category), word)=>
 
-      ((appId, word),1)
+      (((appId,category), word),1)
     }
       .reduceByKey(_+_)
       .map{case ((appId,word),num)=>
@@ -196,10 +196,10 @@ object LDAtrain {
       .repartition(50)
 
 
-
+    // == id : appId,cate=====
     val raw = userTable.zipWithIndex
     val corpus  = raw.map(x=> (x._2,x._1._2)).cache()
-    val idWPithIndex = raw.map(x=>(x._2,x._1._2))
+    val idWPithIndex = raw.map(x=>(x._2,x._1._1._2))
       .collect()
       .toMap
 
