@@ -109,27 +109,16 @@ object Prepare4LDA {
       .reduceByKey(_+_)
       .filter{case (word,count)=>
 
-          count > 30
+          count < 30
       }
       .map(x=> x._1)
+        .zipWithIndex()
+        .map{case (word,index)=>
 
+          word+":"+index
+        }
 
-
-
-
-
-    val wordTable  = AppWithDesc.map(x=>
-      x._2)
-      .distinct()
-      .subtract(WordCooccureance)
-      .zipWithIndex()
-      .map{case (word,index)=>
-
-         word+":"+index
-      }
-
-      . saveAsTextFile(savepath)
-
+        . saveAsTextFile(savepath)
 
   }
 
