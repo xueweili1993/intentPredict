@@ -25,7 +25,7 @@ object SQLdata4LDA {
 
     val stoppath = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/ldaData/part-00000"
+    val savepath = "hdfs:///lxw/ldaData/part0"
     val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
 
     HDFS.removeFile(savepath)
@@ -114,6 +114,7 @@ object SQLdata4LDA {
 
           cate+"\t"+text
       }
+        .repartition(1)
       .saveAsTextFile(savepath)
 
 
