@@ -21,11 +21,11 @@ object SQLdata4LDA {
     val sc = new SparkContext(conf)
     val hadoopConf = sc.hadoopConfiguration
 
-    val catePath = "hdfs:///lxw/test3/part-00002"
+    val catePath = "hdfs:///lxw/test3/part-00003"
 
     val stoppath = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/ldaData/part2"
+    val savepath = "hdfs:///lxw/ldaData/part3"
     val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
 
     HDFS.removeFile(savepath)
