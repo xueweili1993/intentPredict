@@ -38,7 +38,7 @@ object SQLdata4LDA {
   def TitleWithCountryAdid(sc: SparkContext) = {
 
 
-    val sqlcmd = "SELECT ad.title,ad.id,ad_country.country,ad.category FROM ad,ad_country WHERE is_deleted = 0 AND is_updated = 1 AND (remaining_daily_cap = 0 OR remaining_daily_cap > 30) AND platform = 'android' AND ad.id = ad_country.ad_id"
+    val sqlcmd = "select app_id, category from app where is_updated = 1 and platform = 'ANDROID'"
 
     val conn = DriverManager.getConnection("jdbc:mysql://172.31.27.7/koala", "aduser3", "VbhaYja_eErJ")
 
