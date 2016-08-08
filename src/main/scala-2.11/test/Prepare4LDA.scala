@@ -14,7 +14,7 @@ object Prepare4LDA {
     val sc = new SparkContext(conf)
     val hadoopConf = sc.hadoopConfiguration
 
-    val catePath = "hdfs:///lxw/AppWithCate/part-00000"
+    val catePath = "hdfs:///lxw/test3/*"
     val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
     val stoppath = "hdfs:///lxw/stopwords"
 
