@@ -46,6 +46,10 @@ object SQLdata4LDA {
       .filter{case (appid, category)=>
            cateArray.contains(category)
       }
+      .map{case (appid, cate)=>
+
+          appid+"\t"+cate
+      }
       .saveAsTextFile(savepath)
 
 

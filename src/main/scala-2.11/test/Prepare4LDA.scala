@@ -126,7 +126,6 @@ object Prepare4LDA {
         }
         .repartition(1)
         . saveAsTextFile(savepath)
-
   }
 
 }
