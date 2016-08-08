@@ -21,36 +21,103 @@ object SQLdata4LDA {
     val sc = new SparkContext(conf)
     val hadoopConf = sc.hadoopConfiguration
 
-    val hdfspath = "hdfs:///lxw/test2"
-    val savepath = "hdfs:///lxw/test3"
+    val catePath = "hdfs:///lxw/test3/part-00000"
+
+    val stoppath = "hdfs:///lxw/stopwords"
+
+    val savepath = "hdfs:///lxw/ldaData/part-00000"
+    val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
+
     HDFS.removeFile(savepath)
 
-    val cateArray = Array("SHOPPING","GAME_MUSIC","SOCIAL","TOOLS","PHOTOGRAPHY")
 
-    val AppWithCate = sc.textFile(hdfspath)
+    val stopwords = sc.textFile(stoppath)
+      .collect()
+      .toSet
+
+    val bStop = sc.broadcast(stopwords)
+
+
+
+    val AppWithCate = sc.textFile(catePath)
+      .flatMap{case line=>
+        try {
+          val linearray = line.split("\t")
+          val appId = linearray(0)
+          val category = linearray(1)
+
+            Some((appId, category))
+
+        }
+        catch{
+          case _: Throwable =>
+            None
+        }
+      }
+
+    val AppWithDesc = sc.textFile(descPath)
+
       .map{case line =>
 
-          val linearray = line.replaceAll("\\(|\\)","").split(",")
-          if(linearray.length>1){
-
-            val appid = linearray(0)
-            val category = linearray(1)
-
-            (appid,category)
-
-          }
-          else {
-            ("","")
-          }
+        val linearray  = line.split("\t")
+        val appId = linearray(0)
+        val  text = {
+          if (linearray.length>1)
+            linearray(1).toLowerCase().replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
+          else
+            ""
+        }
+        (appId,text)
       }
-      .filter{case (appid, category)=>
-           cateArray.contains(category)
-      }
-      .map{case (appid, cate)=>
+      .join(AppWithCate)
+      .repartition(500)
+      .flatMap{case (appId, (text,cate))=>
 
-          appid+"\t"+cate
+        val stop  = bStop.value
+        val words = text.split(" ")
+
+        words.map{x=>
+
+          var stemmer = new Stemmer()
+          stemmer.add(x.trim())
+          if ( stemmer.b.length > 2 )
+          {
+            stemmer.step1()
+            stemmer.step2()
+            stemmer.step3()
+            stemmer.step4()
+            stemmer.step5a()
+            stemmer.step5b()
+          }
+          val x1 = stemmer.b
+
+          if (stop.contains(x1))
+          {
+            (("",""),"")
+          }
+          else{
+            ((appId,cate),x1)
+          }
+        }
+
+      }
+      .filter{case ((appId,cate),word)=>
+
+        word.length>3
+      }
+      .map{case ((appId,cate),word)=>
+
+        (cate, word)
+      }
+      .reduceByKey(_+" "+_)
+      .map{case (cate, text )=>
+
+          cate+"\t"+text
       }
       .saveAsTextFile(savepath)
+
+
+
 
 
   }
