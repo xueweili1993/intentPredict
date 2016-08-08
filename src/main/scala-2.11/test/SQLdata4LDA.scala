@@ -49,15 +49,14 @@ object SQLdata4LDA {
     val stmt = conn.createStatement()
     val rs = stmt.executeQuery(sqlcmd)
 
-    val adinfo = new ArrayBuffer[(String, String, String,String)]()
+    val adinfo = new ArrayBuffer[(String, String)]()
 
     while (rs.next) {
-      val title = rs.getString(1).toLowerCase()
-      val adid = rs.getString(2)
-      val country = rs.getString(3)
-      val category = rs.getString(4)
+      val app_id = rs.getString(1).toLowerCase()
+      val category = rs.getString(2)
 
-      adinfo += ((title, adid,country,category))
+
+      adinfo += ((app_id,category))
     }
 
 
