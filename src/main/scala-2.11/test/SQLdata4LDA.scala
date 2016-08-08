@@ -21,10 +21,31 @@ object SQLdata4LDA {
     val sc = new SparkContext(conf)
     val hadoopConf = sc.hadoopConfiguration
 
-    val savepath = "hdfs:///lxw/test2"
+    val hdfspath = "hdfs:///lxw/test2"
+    val savepath = "hdfs:///lxw/test3"
     HDFS.removeFile(savepath)
 
-    val adDataWithCate = TitleWithCountryAdid(sc)
+    val cateArray = Array("SHOPPING","GAME_MUSIC","SOCIAL","TOOLS","PHOTOGRAPHY")
+
+    val AppWithCate = sc.textFile(hdfspath)
+      .map{case line =>
+
+          val linearray = line.replaceAll("\\(|\\)","").split(",")
+          if(linearray.length>1){
+
+            val appid = linearray(0)
+            val category = linearray(1)
+
+            (appid,category)
+
+          }
+          else {
+            ("","")
+          }
+      }
+      .filter{case (appid, category)=>
+           cateArray.contains(category)
+      }
       .saveAsTextFile(savepath)
 
 
