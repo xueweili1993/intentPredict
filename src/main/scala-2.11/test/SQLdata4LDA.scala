@@ -2,6 +2,8 @@ package test
 
 import java.sql.DriverManager
 
+import org.apache.spark.mllib.clustering.{LDA, LocalLDAModel}
+import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.mutable.ArrayBuffer
@@ -12,7 +14,7 @@ import scala.collection.mutable.ArrayBuffer
 object SQLdata4LDA {
 
 
-
+   val TopicNum = 5
 
   def main (args: Array[String])={
 
@@ -25,99 +27,137 @@ object SQLdata4LDA {
 
     val stoppath = "hdfs:///lxw/stopwords"
 
-    val savepath = "hdfs:///lxw/ldaData/part5"
+    val sourcepath = "hdfs:///lxw/ldaData/part*/part-00000"
     val descPath = "hdfs:///lxw/AppWithDiscreption/part-00000"
+
+    val savepath = "hdfs:///lxw/test"
 
     HDFS.removeFile(savepath)
 
 
-    val stopwords = sc.textFile(stoppath)
-      .collect()
-      .toSet
+    val wordtablePath = "hdfs:///lxw/test1"
 
-    val bStop = sc.broadcast(stopwords)
-
-
-
-    val AppWithCate = sc.textFile(catePath)
+    val wordTable = sc.textFile(wordtablePath)
       .flatMap{case line=>
-        try {
-          val linearray = line.split("\t")
-          val appId = linearray(0)
-          val category = linearray(1)
 
-            Some((appId, category))
-
+        val linearray = line.split(":")
+        if (linearray.length>1)
+        {
+          Some((linearray(0),linearray(1).toInt))
         }
-        catch{
-          case _: Throwable =>
-            None
+        else {
+          None
         }
       }
+      // .saveAsTextFile(savepath)
+      .collect()
 
-    val AppWithDesc = sc.textFile(descPath)
+    val length = wordTable.length
+    val wordTable1 = wordTable
+      .toMap
+    val wordTable2 = wordTable.map(_.swap)
+      .toMap
 
+    val broadwordTable = sc.broadcast(wordTable1)
+
+    val trainData  = sc.textFile(sourcepath)
       .map{case line =>
 
-        val linearray  = line.split("\t")
-        val appId = linearray(0)
-        val  text = {
-          if (linearray.length>1)
-            linearray(1).toLowerCase().replaceAll("[^a-z]"," ").replaceAll(" +"," ").trim
-          else
-            ""
+          val linearray = line.split("\t")
+          val category = linearray(0)
+          val words = linearray(1).split(" ")
+        (category,words)
+      }
+      .zipWithIndex()
+
+
+    val index2them = trainData.map{case ((cate, words),index)=>
+
+      (index,cate)
+    }
+      .collect()
+      .toMap
+
+    val corpus  = trainData
+      .flatMap{case ((cate, words),index)=>
+
+        words.map{x =>
+
+          ((index,x),1)
+
         }
-        (appId,text)
       }
-      .join(AppWithCate)
-      .repartition(500)
-      .flatMap{case (appId, (text,cate))=>
+      .reduceByKey(_+_)
+      .map{case ((index,word),num)=>
 
-        val stop  = bStop.value
-        val words = text.split(" ")
+        (index, (word,num))
+      }
+      .groupByKey()
+      .map{case (index,words) =>
 
-        words.map{x=>
 
-          var stemmer = new Stemmer()
-          stemmer.add(x.trim())
-          if ( stemmer.b.length > 2 )
-          {
-            stemmer.step1()
-            stemmer.step2()
-            stemmer.step3()
-            stemmer.step4()
-            stemmer.step5a()
-            stemmer.step5b()
+        val words_table  = broadwordTable.value
+        val indexA = new ArrayBuffer[Int]()
+        val freA  = new ArrayBuffer[Double]()
+
+        words.foreach(x=>
+          if (words_table.contains(x._1)){
+
+            val freq = x._2
+            val index = words_table.get(x._1) match{
+
+              case Some(x) => x
+              case None => -1
+
+            }
+            if (index!= -1) {
+              indexA.append(index)
+              freA.append(freq)
+            }
           }
-          val x1 = stemmer.b
 
-          if (stop.contains(x1))
-          {
-            (("",""),"")
-          }
-          else{
-            ((appId,cate),x1)
+        )
+
+        val Vec = Vectors.sparse(length, indexA.toArray,freA.toArray)
+        (index, Vec)
+
+      }
+
+    val ldaModel = new LDA()
+      .setOptimizer("online")
+      .setK(TopicNum)
+      .run(corpus)
+
+
+    HDFS.removeFile("hdfs:///lxw/ldamodel")
+    ldaModel.save(sc,"hdfs:///lxw/ldamodel")
+
+    val sameModel = LocalLDAModel.load(sc, "hdfs:///lxw/ldamodel")
+
+
+    val distribution  = sameModel.topicDistributions(corpus)
+      .map{case (index, vec)=>
+
+        var ind = -1
+        var weight = 0.0
+
+        for (i<- 0 to TopicNum-1){
+
+          if (vec(i)>0.5){
+
+            ind = i
+            weight = vec(i)
+
           }
         }
+        val cate = index2them.get(index) match{
+          case Some (x)=> x
+          case None => ""
+        }
 
+        (cate, ind, weight)
       }
-      .filter{case ((appId,cate),word)=>
-
-        word.length>3
-      }
-      .map{case ((appId,cate),word)=>
-
-        (cate, word)
-      }
-      .reduceByKey(_+" "+_)
-      .map{case (cate, text )=>
-
-          cate+"\t"+text
-      }
-        .repartition(1)
       .saveAsTextFile(savepath)
-
-
 
 
 
